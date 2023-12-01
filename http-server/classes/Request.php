@@ -7,13 +7,13 @@
     public $response;
 
     public function __construct($method) {
-      $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
       $this->response = new stdClass();
       $this->method = $method;
     }
 
     public function request () {
       try {
+        $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
         $this->validateRequest(); # Validate if request is the same method defined
         $this->execute(); # Execute code of children class
       } catch (Exception $e) {
