@@ -11,6 +11,7 @@
 		}
 	}
 
-	$job = new Example('POST'); # Just need declare the class, will execute request
+	$job = new Example('GET'); # Just need declare the class, will execute request
 	echo $job->request(); # Start request action
 ?>
+
