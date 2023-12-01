@@ -7,7 +7,7 @@
     public $response;
 
     public function __construct($method) {
-      $this->db = new mysqli('localhost:3306', 'root', '123', 'mysql'); # TODO
+      $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
       $this->response = new stdClass();
       $this->method = $method;
     }
