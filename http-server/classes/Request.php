@@ -17,7 +17,7 @@
         $this->validateRequest(); # Validate if request is the same method defined
         $this->execute(); # Execute code of children class
       } catch (Exception $e) {
-        error_log($e->getTraceAsString≤());
+        error_log($e->getTraceAsString());
         $this->send_error("Algo correu mal, tente novamente mais tarde!", 501);
       } catch (ServerException $e) {
         $this->send_error($e->getMessage(), $e->getCode());
