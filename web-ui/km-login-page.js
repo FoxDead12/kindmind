@@ -99,7 +99,7 @@ export class Login extends LitElement {
     }
 
     simple-button {
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     .row {
@@ -165,7 +165,7 @@ export class Login extends LitElement {
         </div>
 
         <div class="sub-container">
-          <img src="svgs/svg-people.svg" alt="Students" width="510" height="510"/>
+          <img src="svgs/svg-people.svg" alt="Students" width="490" height="490"/>
         </div>
       </form>
     `
