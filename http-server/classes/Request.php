@@ -5,10 +5,14 @@
     public $db;
     private $method;
     public $response;
+    public $body;
 
     public function __construct($method) {
       $this->response = new stdClass();
+      $this->body = file_get_contents('php://input');
+      $this->body = json_decode($this->body);
       $this->method = $method;
+      $this->setHeader();
     }
 
     public function request () {
@@ -16,13 +20,14 @@
         $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
         $this->validateRequest(); # Validate if request is the same method defined
         $this->execute(); # Execute code of children class
+      } catch (ServerException $e) {
+        $this->send_error($e->getMessage(), $e->getCode());
       } catch (Exception $e) {
         error_log($e->getTraceAsString());
         $this->send_error("Algo correu mal, tente novamente mais tarde!", 501);
-      } catch (ServerException $e) {
-        $this->send_error($e->getMessage(), $e->getCode());
       }
 
+      $this->db->close();
       echo $this->response;
     }
 
@@ -32,7 +37,7 @@
 
     private function validateRequest () {
       if ($_SERVER['REQUEST_METHOD'] !== $this->method) {
-        throw new ServerException('Method Not Allowed', 405);
+        throw new ServerException('Method Not Allowed', 404);
       }
     }
 
@@ -53,6 +58,10 @@
       header('Content-Type: application/json');
       http_response_code($code);
       $this->response = json_encode($this->response);
+    }
+
+    private function setHeader () {
+      header('Access-Control-Allow-Origin: *');
     }
   }
 
