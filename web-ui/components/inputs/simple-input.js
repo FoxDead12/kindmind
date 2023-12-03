@@ -11,7 +11,6 @@ export class SimpleInput extends LitElement {
 
   constructor() {
     super()
-
     this.value = ''
   }
 
@@ -21,8 +20,10 @@ export class SimpleInput extends LitElement {
     }
 
     input {
+      float: none;
       position: relative;
       width: 100%;
+      height: 25px;
       padding: 12px 12px;
       font-size: 1rem;
       border: 1px solid #d5d5d5;
@@ -38,8 +39,13 @@ export class SimpleInput extends LitElement {
   `
 
   render() {
+    let type = this.type
+    if (type === 'date') {
+      type = 'text';
+    }
+
     return html`
-      <input @change=${this.__change} .type=${this.type} .placeholder=${this.placeholder} .required=${this.required} .value=${this.value} />
+      <input @focus=${this.__focus} @blur=${this.__blur} @change=${this.__change} .type=${type} .placeholder=${this.placeholder} .required=${this.required} .value=${this.value} />
     `
   }
 
@@ -53,6 +59,20 @@ export class SimpleInput extends LitElement {
     });
 
     this.dispatchEvent(event);
+  }
+
+  __focus (e) {
+    if (this.type === 'date') {
+      e.currentTarget.type = 'date'
+    }
+  }
+
+  __blur (e) {
+    if (this.type === 'date') {
+      if (this.value === '') {
+        e.currentTarget.type = 'text'
+      }
+    }
   }
 }
 
