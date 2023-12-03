@@ -18,7 +18,7 @@ export class SimpleCheckbox extends LitElement {
 
     label {
       font-family: 'Nunito', sans-serif;
-      color: var(--color-black);
+      color: #333;
       margin-left: 8px;
       font-size: 1rem;
     }

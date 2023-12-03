@@ -25,7 +25,7 @@ export class SimpleLink extends LitElement {
       -moz-transition: color 300ms ease-out;
       -o-transition: color 300ms ease-out;
       transition: color 300ms ease-out;
-      color: var(--color-black);
+      color: #333;
     }
 
     span:hover {
