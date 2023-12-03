@@ -89,7 +89,10 @@ export class Login extends LitElement {
       font-family: 'Nunito', sans-serif;
       margin-bottom: 25px;
       font-size: 1.8rem;
-      color: var(--color-black);
+    }
+
+    form > .sub-container:first-child > h2 > span {
+      color: var(--color-red);
     }
 
     form > .sub-container:last-child {
@@ -151,7 +154,7 @@ export class Login extends LitElement {
     return html`
       <form id="form">
         <div class="sub-container">
-          <h2>Welcome Back</h2>
+          <h2>Welcome Back to <span>KindMind<span></h2>
 
           <simple-input id="email" type="email" placeholder="Your email" required></simple-input>
           <simple-input id="password" type="password" placeholder="Your password" required></simple-input>
@@ -171,11 +174,17 @@ export class Login extends LitElement {
     `
   }
 
-  __buttonClick (e) {
+  async __buttonClick (e) {
 
     const email = this.shadowRoot.getElementById('email').value
     const password = this.shadowRoot.getElementById('password').value
     const session = this.shadowRoot.getElementById('session').checked
+
+    try {
+      const result = await app.executeJob('POST', '/auth/login.php', 3000, {email, password, session});
+      console.log(result)
+    } catch (e) {
+    }
   }
 }
 
