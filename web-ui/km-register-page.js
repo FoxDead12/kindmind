@@ -95,7 +95,6 @@ export class Register extends LitElement {
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--color-black);
-      font-weight: 900;
       margin-bottom: 25px;
     }
 
