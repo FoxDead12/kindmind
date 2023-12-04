@@ -24,6 +24,10 @@ export class App extends LitElement {
         import('./km-login-page')
         component = html `<app-login></app-login>`
         break;
+      case '/register':
+        import('./km-register-page')
+        component = html `<app-register></app-register>`
+        break;
     }
 
     return component;
