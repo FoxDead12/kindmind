@@ -24,10 +24,10 @@
       $this->setHeader();
       $this->setEnv();
 
-      ob_end_clean();
-      header("Connection: close");
-      ignore_user_abort(); // optional
-      ob_start();
+      // ob_end_clean();
+      // header("Connection: close");
+      // ignore_user_abort(); // optional
+      // ob_start();
     }
 
     public function request () {
@@ -81,11 +81,11 @@
       $this->response = json_encode($this->response);
       echo $this->response;
 
-      $obSize = ob_get_length();
-      header("Content-Length: $obSize");
-      ob_end_flush();
-      flush();
-      session_write_close();
+      // $obSize = ob_get_length();
+      // header("Content-Length: $obSize");
+      // ob_end_flush();
+      // flush();
+      // session_write_close();
     }
 
     private function setHeader () {
