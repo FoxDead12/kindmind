@@ -62,6 +62,10 @@
 
       http_response_code($code);
 
+      ini_set('output_buffering', 'off');
+      // Enable implicit flush
+      ob_implicit_flush(true);
+
       // SET BODY
       echo $this->response;
 
