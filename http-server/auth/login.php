@@ -7,8 +7,8 @@
       $email = $this->body->email;
       $password = $this->body->password;
       $keep_session = $this->body->session;
-
-      $this->send_success('MENSAGEM DE SUCESSO', 200);
+			// password_verify($entered_password, $stored_hashed_password)
+			$this->send_success('MENSAGEM DE SUCESSO', 200);
 		}
 	}
 

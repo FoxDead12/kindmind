@@ -1,3 +1,6 @@
 Create Migration: node migration.js add migration {{migration_name}}
 Run Migrations: node migration.js up # Runs all the pending up migrations.
 Remove Last Migration: node migration.js down # Runs only 1 down migrations.
+
+
+Composer install dependence: php composer.phar require phpmailer/phpmailer

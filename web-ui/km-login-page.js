@@ -184,6 +184,7 @@ export class Login extends LitElement {
       const result = await app.executeJob('POST', '/auth/login.php', 3000, {email, password, session});
       console.log(result)
     } catch (e) {
+      console.error(e)
     }
   }
 }

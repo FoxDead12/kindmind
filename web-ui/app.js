@@ -1,4 +1,6 @@
 import { LitElement, css, html } from 'lit'
+import './app-toast'
+import './app-loader'
 export class App extends LitElement {
 
   constructor() {
@@ -9,8 +11,17 @@ export class App extends LitElement {
     this.urlHost = 'http://localhost:8000' // DEV
   }
 
+  firstUpdated () {
+    this.toast = this.shadowRoot.getElementById('toast')
+    this.loader = this.shadowRoot.getElementById('loader')
+  }
+
   render() {
-    return this.__routeManager()
+    return html `
+      <app-loader id="loader"></app-loader>
+      <app-toast id="toast"></app-toast>
+      ${this.__routeManager()}
+    `
   }
 
   __routeManager () {
@@ -28,6 +39,10 @@ export class App extends LitElement {
         import('./km-register-page')
         component = html `<app-register></app-register>`
         break;
+      case '/activate':
+        import ('./km-activate-page');
+        component = html `<km-activate-page></km-activate-page>`
+        break;
     }
 
     return component;
@@ -40,21 +55,26 @@ export class App extends LitElement {
       var xhr = new XMLHttpRequest();
       xhr.timeout = timeout
       xhr.open(method, url);
+
       if (method === 'POST') {
         // xhr.setRequestHeader("Content-Type", "application/json");
       }
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-
           resolve(JSON.parse(xhr.response));
         } else {
-          reject(new Error(xhr.statusText));
+          reject(JSON.parse(xhr.response));
         }
       };
 
       xhr.onerror = function() {
-        reject(new Error('Network error'));
+        reject(new Error('Something goes wrong communicating with the server, try again later!'));
+      };
+
+      xhr.ontimeout = (e) => {
+        // XMLHttpRequest timed out. Do something here.
+        reject(new Error('The task took longer than expected, please try again!'));
       };
 
       if (method === 'POST') {
@@ -64,6 +84,18 @@ export class App extends LitElement {
         xhr.send();
       }
     })
+  }
+
+  openToast (message, type) {
+    this.toast.open(message, type)
+  }
+
+  openLoader (message) {
+    this.loader.open (message);
+  }
+
+  closeLoader () {
+    this.loader.close ();
   }
 }
 

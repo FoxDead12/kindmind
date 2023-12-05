@@ -131,6 +131,39 @@ export class Register extends LitElement {
     simple-button {
       margin-top: 25px;
     }
+
+    @media only screen and (max-width: 950px) {
+      form {
+        width: 90%;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        flex-direction: row;
+      }
+
+      form::before {
+        display: none;
+      }
+
+      form > .sub-container:last-child {
+        width: 100%;
+        height: 100%;
+        padding: 0px 12px;
+      }
+
+      form > .sub-container:first-child {
+        display: none;
+        width: 0px;
+        height: 0px;
+      }
+
+      .row {
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        gap: 25px;
+      }
+    }
   `
 
   constructor() {
@@ -160,11 +193,11 @@ export class Register extends LitElement {
 
           <div class="role-container">
             <div>
-              <input type="radio" id="student" name="role"/>
+              <input type="radio" id="student" name="role" value="0" />
               <label for="student">Student</label>
             </div>
             <div>
-              <input type="radio" id="professor" name="role"/>
+              <input type="radio" id="professor" name="role" value="1" />
               <label for="professor">Professor</label>
             </div>
           </div>
@@ -175,8 +208,69 @@ export class Register extends LitElement {
     `
   }
 
-  __buttonClick (e) {
+  validate () {
+    var isValid = true;
+    var inputs = this.shadowRoot.querySelectorAll('simple-input')
+    inputs.forEach (input => {
+      if (input.value === '' && !input.value) {
+        input.invalid = true
+        isValid = false
+      }
+    })
 
+    const radios = this.shadowRoot.querySelectorAll('input[type=radio]');
+    let selectedInput;
+    radios.forEach (input => {
+      if (input.checked === true) {
+        selectedInput = false
+      }
+    })
+    if (selectedInput == undefined) {
+      isValid = false
+    }
+
+    if (isValid === false) {
+      app.openToast('Preencha todos os campos necessarios!', 'error')
+    }
+
+    return isValid
+  }
+
+  async __buttonClick (e) {
+    const valid = this.validate()
+    if (valid === false) return;
+
+    app.openLoader('We are creating your account');
+    const name = this.shadowRoot.getElementById('name').value
+    const email = this.shadowRoot.getElementById('email').value
+    const date = this.shadowRoot.getElementById('date').value
+    const password = this.shadowRoot.getElementById('password').value
+    var role;
+
+    this.shadowRoot.querySelectorAll('input[type=radio]').forEach (input => {
+      if (input.checked === true) {
+        role = input.value
+      }
+    })
+
+    try {
+      const result = await app.executeJob('POST', '/auth/register.php', 3000, {
+        name,
+        email,
+        date,
+        password,
+        role
+      });
+
+      // Open the activate account
+      app.openToast(result.message, 'success')
+
+    } catch (e) {
+      console.error(e)
+      app.openToast(e.message, 'error')
+    }
+
+    app.closeLoader();
   }
 }
 
