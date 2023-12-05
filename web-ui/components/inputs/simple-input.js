@@ -6,13 +6,14 @@ export class SimpleInput extends LitElement {
     type: { type: String },
     placeholder: { type: String },
     required: { type: Boolean },
-    value: { type: String }
+    value: { type: String },
+    invalid: { type: Boolean }
   }
 
   constructor() {
     super()
-
     this.value = ''
+    this.invalid = false
   }
 
   static styles = css `
@@ -21,8 +22,10 @@ export class SimpleInput extends LitElement {
     }
 
     input {
+      float: none;
       position: relative;
       width: 100%;
+      height: 25px;
       padding: 12px 12px;
       font-size: 1rem;
       border: 1px solid #d5d5d5;
@@ -32,14 +35,24 @@ export class SimpleInput extends LitElement {
       color: var(--color-black);
     }
 
+    .invalid {
+      outline-color: var(--color-red);
+      border: 1px solid var(--color-red);
+    }
+
     input::placeholder {
       color: #333;
     }
   `
 
   render() {
+    let type = this.type
+    if (type === 'date') {
+      type = 'text';
+    }
+
     return html`
-      <input @change=${this.__change} .type=${this.type} .placeholder=${this.placeholder} .required=${this.required} .value=${this.value} />
+      <input class="${this.invalid === true ? `invalid` : ''}" @change=${this.__keypress} @keypress=${this.__keypress} @focus=${this.__focus} @blur=${this.__blur} @change=${this.__change} .type=${type} .placeholder=${this.placeholder} .required=${this.required} .value=${this.value} />
     `
   }
 
@@ -53,6 +66,26 @@ export class SimpleInput extends LitElement {
     });
 
     this.dispatchEvent(event);
+  }
+
+  __focus (e) {
+    if (this.type === 'date') {
+      e.currentTarget.type = 'date'
+    }
+  }
+
+  __blur (e) {
+    if (this.type === 'date') {
+      if (this.value === '') {
+        e.currentTarget.type = 'text'
+      }
+    }
+  }
+
+  __keypress (e) {
+    if (this.invalid === true) {
+      this.invalid = false
+    }
   }
 }
 

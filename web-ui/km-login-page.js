@@ -154,7 +154,7 @@ export class Login extends LitElement {
     return html`
       <form id="form">
         <div class="sub-container">
-          <h2>Welcome Back to <span>KindMind<span></h2>
+          <h2>Welcome Back to <span>KindMind!<span></h2>
 
           <simple-input id="email" type="email" placeholder="Your email" required></simple-input>
           <simple-input id="password" type="password" placeholder="Your password" required></simple-input>
@@ -184,6 +184,7 @@ export class Login extends LitElement {
       const result = await app.executeJob('POST', '/auth/login.php', 3000, {email, password, session});
       console.log(result)
     } catch (e) {
+      console.error(e)
     }
   }
 }

@@ -11,6 +11,6 @@ var connection = mysql.createPool({
   insecureAuth : true
 });
 
-migration.init(connection, path.join('./db/migrations'), function() {
+migration.init(connection, path.join('db/migrations'), function() {
   console.log("finished running migrations");
 });

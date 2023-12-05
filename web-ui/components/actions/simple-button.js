@@ -52,16 +52,6 @@ export class simpleButton extends LitElement {
       </button>
     `
   }
-
-  __onClick (e) {
-    const event = new CustomEvent('click', {
-      detail: null,
-      bubbles: true,
-      composed: true,
-    });
-
-    this.dispatchEvent(event);
-  }
 }
 
 window.customElements.define('simple-button', simpleButton)

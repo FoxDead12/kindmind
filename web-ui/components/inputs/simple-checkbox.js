@@ -2,7 +2,6 @@ import { LitElement, css, html } from 'lit'
 
 export class SimpleCheckbox extends LitElement {
   static properties = {
-
   }
 
   constructor() {
@@ -30,8 +29,8 @@ export class SimpleCheckbox extends LitElement {
 
   render() {
     return html`
-      <input @change=${this.__change} type="checkbox" id="horns" name="horns" />
-      <label for="horns">${this.innerHTML}</label>
+      <input @change=${this.__change} type="checkbox" .id="${this.id}" .name="${this.name}" />
+      <label for="${this.id}">${this.innerHTML}</label>
     `
   }
 
