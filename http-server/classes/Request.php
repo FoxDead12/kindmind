@@ -33,7 +33,7 @@
       } catch (ServerException $e) {
         $this->send_message($e->getMessage(), $e->getCode());
       } catch (Exception $e) {
-        error_log($e->getTraceAsString(), false);
+        error_log($e->getTraceAsString());
         $this->send_message("Algo correu mal, tente novamente mais tarde!", 501);
       }
 
@@ -83,8 +83,9 @@
       $this->env->url_front = 'http://localhost:5173/';
     }
 
-    protected function generate_token () {
-
+    protected function log ($data) {
+      $message = print_r($data, true);
+      error_log($message);
     }
   }
 
