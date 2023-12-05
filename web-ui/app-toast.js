@@ -88,7 +88,8 @@ export class AppToast extends LitElement {
   }
 
   open (message, type) {
-    if (this._show === false) {
+    if (this._show === false || this.type != type) {
+      if (this._show === true) clearTimeout(this.timeout);
       this._show = true
       this.message = message
       this.type = type
