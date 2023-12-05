@@ -24,6 +24,7 @@ export class Register extends LitElement {
       top: 0px;
       left: 50%;
       opacity: 0.3;
+      display: none;
     }
 
     :host::after {
@@ -35,6 +36,7 @@ export class Register extends LitElement {
       height: 100%;
       left: 0;
       top: 0px;
+      display: none;
     }
 
     form {
@@ -180,6 +182,12 @@ export class Register extends LitElement {
         gap: 12px;
       }
     }
+
+    .background {
+      z-index: 2;
+      width: 100vw;
+      height: 100vh;
+    }
   `
 
   constructor() {
@@ -188,6 +196,7 @@ export class Register extends LitElement {
 
   render() {
     return html `
+      <img class="background" src="svgs/wave.svg" alt="Wave background" width="490" height="490"/>
       <form>
         <div class="sub-container">
           <img src="svgs/svg-people-2.svg" alt="Students" width="490" height="490"/>
