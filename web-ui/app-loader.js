@@ -105,7 +105,7 @@ export class AppLoader extends LitElement {
 
   render() {
 
-    if (!this._show) return
+    if (this._show == false) return
 
     return html `
       <div class="container">

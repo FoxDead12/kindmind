@@ -23,11 +23,6 @@
       $this->method = $method;
       $this->setHeader();
       $this->setEnv();
-
-      ob_end_clean();
-      header("Connection: close");
-      ignore_user_abort(); // optional
-      ob_start();
     }
 
     public function request () {
@@ -36,10 +31,10 @@
         $this->validateRequest(); # Validate if request is the same method defined
         $this->execute(); # Execute code of children class
       } catch (ServerException $e) {
-        $this->send_error($e->getMessage(), $e->getCode());
+        $this->send_message($e->getMessage(), $e->getCode());
       } catch (Exception $e) {
-        error_log($e->getTraceAsString());
-        $this->send_error("Algo correu mal, tente novamente mais tarde!", 501);
+        error_log($e->getTraceAsString(), false);
+        $this->send_message("Algo correu mal, tente novamente mais tarde!", 501);
       }
 
       $this->db->close();
@@ -55,41 +50,28 @@
       }
     }
 
-    protected function send_error ($message, $code) {
-      $this->response->message = $message;
-      $this->response->code = $code;
-      header('Content-Type: application/json');
-      http_response_code($code);
-      $this->response = json_encode($this->response);
-      echo $this->response;
-
-      $obSize = ob_get_length();
-      header("Content-Length: $obSize");
-      ob_end_flush();
-      flush();
-      session_write_close();
-    }
-
-    protected function send_success ($message, $code, $body = null) {
+    protected function send_message ($message, $code, $flush = true, $body = null) {
       $this->response->message = $message;
       $this->response->code = $code;
       if ($body) {
         $this->response->body = $body;
       }
-      header('Content-Type: application/json');
-      http_response_code($code);
+
+      // JSON OBJECT
       $this->response = json_encode($this->response);
+
+      http_response_code($code);
+
+      // SET BODY
       echo $this->response;
 
-      $obSize = ob_get_length();
-      header("Content-Length: $obSize");
-      ob_end_flush();
       flush();
-      session_write_close();
+      ob_flush();
     }
 
     private function setHeader () {
       header('Access-Control-Allow-Origin: *');
+      header('Content-Type: application/json');
     }
 
     private function setEnv () {
