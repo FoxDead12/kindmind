@@ -1,14 +1,18 @@
 <?php
 
   include 'exceptions/server-exception.php';
+  include 'Mailer.php';
+
   class Request {
     public $db;
     private $method;
     public $response;
     public $body;
+    protected $mailer;
 
     public function __construct($method) {
       $this->response = new stdClass();
+      $this->mailer = new Mailer();
       $this->body = file_get_contents('php://input');
       $this->body = json_decode($this->body);
       $this->method = $method;

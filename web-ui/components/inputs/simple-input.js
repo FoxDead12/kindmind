@@ -6,12 +6,14 @@ export class SimpleInput extends LitElement {
     type: { type: String },
     placeholder: { type: String },
     required: { type: Boolean },
-    value: { type: String }
+    value: { type: String },
+    invalid: { type: Boolean }
   }
 
   constructor() {
     super()
     this.value = ''
+    this.invalid = false
   }
 
   static styles = css `
@@ -33,6 +35,11 @@ export class SimpleInput extends LitElement {
       color: var(--color-black);
     }
 
+    .invalid {
+      outline-color: var(--color-red);
+      border: 1px solid var(--color-red);
+    }
+
     input::placeholder {
       color: #333;
     }
@@ -45,7 +52,7 @@ export class SimpleInput extends LitElement {
     }
 
     return html`
-      <input @focus=${this.__focus} @blur=${this.__blur} @change=${this.__change} .type=${type} .placeholder=${this.placeholder} .required=${this.required} .value=${this.value} />
+      <input class="${this.invalid === true ? `invalid` : ''}" @change=${this.__keypress} @keypress=${this.__keypress} @focus=${this.__focus} @blur=${this.__blur} @change=${this.__change} .type=${type} .placeholder=${this.placeholder} .required=${this.required} .value=${this.value} />
     `
   }
 
@@ -72,6 +79,12 @@ export class SimpleInput extends LitElement {
       if (this.value === '') {
         e.currentTarget.type = 'text'
       }
+    }
+  }
+
+  __keypress (e) {
+    if (this.invalid === true) {
+      this.invalid = false
     }
   }
 }
