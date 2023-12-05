@@ -63,11 +63,11 @@
       $this->response = json_encode($this->response);
       echo $this->response;
 
-      $obSize = ob_get_length();
-      header("Content-Length: $obSize");
-      ob_end_flush();
-      flush();
-      session_write_close();
+      // $obSize = ob_get_length();
+      // header("Content-Length: $obSize");
+      // ob_end_flush();
+      // flush();
+      // session_write_close();
     }
 
     protected function send_success ($message, $code, $body = null) {
