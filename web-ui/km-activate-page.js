@@ -24,6 +24,7 @@ export class Activate extends LitElement {
       top: 0px;
       left: 50%;
       opacity: 0.3;
+      display: none;
     }
 
     :host::after {
@@ -35,6 +36,7 @@ export class Activate extends LitElement {
       height: 100%;
       left: 0;
       top: 0px;
+      display: none;
     }
 
     .checkmark {
@@ -123,6 +125,12 @@ export class Activate extends LitElement {
       font-family: 'Nunito', sans-serif;
       text-align: center;
     }
+
+    .background {
+      z-index: 2;
+      width: 100vw;
+      height: 100vh;
+    }
   `
 
   constructor() {
@@ -135,9 +143,10 @@ export class Activate extends LitElement {
 
   render() {
 
-    if (this.loading == true) return;
-
     return html `
+      <img class="background" src="svgs/wave-3.svg" alt="Wave background" width="490" height="490"/>
+
+      ${this.loading === false ? html `
       <div class="container">
 
         <div class="success-animation">
@@ -146,6 +155,7 @@ export class Activate extends LitElement {
 
         <p>Account activated successfully, you can log in to our page!</p>
       </div>
+      ` : ''}
     `
   }
 

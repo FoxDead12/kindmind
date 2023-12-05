@@ -26,6 +26,7 @@ export class Login extends LitElement {
       height: 100%;
       top: 0px;
       left: 50%;
+      display: none;
     }
 
     :host::after {
@@ -38,6 +39,7 @@ export class Login extends LitElement {
       left: 0;
       top: 0px;
       opacity: 0.3;
+      display: none;
     }
 
     form {
@@ -148,10 +150,17 @@ export class Login extends LitElement {
         gap: 25px;
       }
     }
+
+    .background {
+      z-index: 2;
+      width: 100vw;
+      height: 100vh;
+    }
   `
 
   render() {
     return html`
+      <img class="background" src="svgs/wave-2.svg" alt="Wave background" width="490" height="490"/>
       <form id="form">
         <div class="sub-container">
           <h2>Welcome Back to <span>KindMind!<span></h2>
