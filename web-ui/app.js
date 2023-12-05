@@ -60,20 +60,28 @@ export class App extends LitElement {
         // xhr.setRequestHeader("Content-Type", "application/json");
       }
 
-      xhr.onload = () => {
+      // xhr.onload = () => {
+      //   debugger
+      //   if (xhr.status >= 200 && xhr.status < 300) {
+      //     resolve(JSON.parse(xhr.response));
+      //   } else {
+      //     reject(JSON.parse(xhr.response));
+      //   }
+      // };
+
+      xhr.onreadystatechange = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve(JSON.parse(xhr.response));
         } else {
           reject(JSON.parse(xhr.response));
         }
-      };
+      }
 
       xhr.onerror = function() {
         reject(new Error('Something goes wrong communicating with the server, try again later!'));
       };
 
       xhr.ontimeout = (e) => {
-        // XMLHttpRequest timed out. Do something here.
         reject(new Error('The task took longer than expected, please try again!'));
       };
 
