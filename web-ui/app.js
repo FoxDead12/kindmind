@@ -3,6 +3,10 @@ import './app-toast'
 import './app-loader'
 export class App extends LitElement {
 
+  static properties = {
+    url: { type: String }
+  }
+
   constructor() {
     super()
     window.app = this;
@@ -14,6 +18,10 @@ export class App extends LitElement {
   firstUpdated () {
     this.toast = this.shadowRoot.getElementById('toast')
     this.loader = this.shadowRoot.getElementById('loader')
+
+    window.addEventListener("popstate", function (event) {
+      app.url = window.location.pathname;
+    });
   }
 
   render() {
@@ -60,20 +68,13 @@ export class App extends LitElement {
         // xhr.setRequestHeader("Content-Type", "application/json");
       }
 
-      // xhr.onload = () => {
-      //   debugger
-      //   if (xhr.status >= 200 && xhr.status < 300) {
-      //     resolve(JSON.parse(xhr.response));
-      //   } else {
-      //     reject(JSON.parse(xhr.response));
-      //   }
-      // };
-
       xhr.onreadystatechange = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(JSON.parse(xhr.response));
-        } else {
-          reject(JSON.parse(xhr.response));
+        if (xhr.readyState > 2) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.response));
+          } else {
+            reject(JSON.parse(xhr.response));
+          }
         }
       }
 
@@ -104,6 +105,11 @@ export class App extends LitElement {
 
   closeLoader () {
     this.loader.close ();
+  }
+
+  changeRoute (to) {
+    this.url = to;
+    window.history.pushState("", "", to)
   }
 }
 

@@ -1,6 +1,7 @@
 <?php
   use Firebase\JWT\JWT;
   use Firebase\JWT\Key;
+
   include './exceptions/server-exception.php';
 
   class Token {
@@ -16,12 +17,12 @@
     }
 
     public function decode_token ($token) {
-      // try {
-        $decoded = JWT::decode($jwt, new Key($this->secret, 'HS256'));
+      try {
+        $decoded = JWT::decode($token, new Key($this->secret, 'HS256'));
         return $decoded;
-      // } catch (Exception $e) {
-      //   throw new ServerException("Invalid token", 405);
-      // }
+      } catch (Exception $e) {
+        throw new ServerException($e->getMessage(), 405);
+      }
     }
   }
 ?>

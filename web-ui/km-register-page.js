@@ -95,7 +95,7 @@ export class Register extends LitElement {
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--color-black);
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
 
     form > .sub-container:last-child > h2 > span {
@@ -129,7 +129,23 @@ export class Register extends LitElement {
     }
 
     simple-button {
-      margin-top: 25px;
+      margin-top: 15px;
+    }
+
+    .link {
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+      font-size: 0.9rem;
+      text-align: center;
+      border-bottom: 1px solid black;
+      margin: 0px auto;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .link:hover {
+      color: var(--color-blue);
+      border-bottom: 1px solid var(--color-blue);
     }
 
     @media only screen and (max-width: 950px) {
@@ -161,7 +177,7 @@ export class Register extends LitElement {
         flex-direction: column;
         justify-content: start;
         align-items: start;
-        gap: 25px;
+        gap: 12px;
       }
     }
   `
@@ -203,6 +219,8 @@ export class Register extends LitElement {
           </div>
 
           <simple-button @click=${this.__buttonClick}>Create account</simple-button>
+
+          <span class="link" @click=${this.__linkClick}>Already have an account?</span>
         </div>
       </form>
     `
@@ -271,6 +289,10 @@ export class Register extends LitElement {
     }
 
     app.closeLoader();
+  }
+
+  __linkClick (e) {
+    app.changeRoute('/login');
   }
 }
 

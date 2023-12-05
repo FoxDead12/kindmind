@@ -22,7 +22,7 @@
          $this->db->execute_query('INSERT INTO users (full_name, email, hash, role) VALUES (?, ?, ?, ?)', [$name, $email, $hash, $role]);
 
          $this->send_message('Your account was created to activate, just accept the email you will receive!', 201);
-         $token = $this->token_manager->generate_token(["email" => $email, "exp" => 300]);
+         $token = $this->token_manager->generate_token(["email" => $email, "exp" => (time() + (5 * 60))]);
 
          $body_email = ' Estimado(a) ' . $name . '.<br>Obrigado por criar conta na kindmind para ativar conta basta clicar no link abaixo.<br><a href="' . $this->env->url_front . 'activate?token=' . $token . '">CLICK HERE</a>';
          $this->mailer->send_email($email, 'Welcome to KindMind', $body_email);
