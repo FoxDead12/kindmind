@@ -65,6 +65,11 @@ export class App extends LitElement {
         reject(new Error('Something goes wrong communicating with the server, try again later!'));
       };
 
+      xhr.ontimeout = (e) => {
+        // XMLHttpRequest timed out. Do something here.
+        reject(new Error('The task took longer than expected, please try again!'));
+      };
+
       if (method === 'POST') {
         const json = JSON.stringify(body)
         xhr.send(json);
