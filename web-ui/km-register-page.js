@@ -240,6 +240,7 @@ export class Register extends LitElement {
     const valid = this.validate()
     if (valid === false) return;
 
+    app.openLoader('We are creating your account');
     const name = this.shadowRoot.getElementById('name').value
     const email = this.shadowRoot.getElementById('email').value
     const date = this.shadowRoot.getElementById('date').value
@@ -268,6 +269,8 @@ export class Register extends LitElement {
       console.error(e)
       app.openToast(e.message, 'error')
     }
+
+    app.closeLoader();
   }
 }
 

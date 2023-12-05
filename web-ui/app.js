@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import './app-toast'
+import './app-loader'
 export class App extends LitElement {
 
   constructor() {
@@ -12,10 +13,12 @@ export class App extends LitElement {
 
   firstUpdated () {
     this.toast = this.shadowRoot.getElementById('toast')
+    this.loader = this.shadowRoot.getElementById('loader')
   }
 
   render() {
     return html `
+      <app-loader id="loader"></app-loader>
       <app-toast id="toast"></app-toast>
       ${this.__routeManager()}
     `
@@ -35,6 +38,10 @@ export class App extends LitElement {
       case '/register':
         import('./km-register-page')
         component = html `<app-register></app-register>`
+        break;
+      case '/activate':
+        import ('./km-activate-page');
+        component = html `<km-activate-page></km-activate-page>`
         break;
     }
 
@@ -81,6 +88,14 @@ export class App extends LitElement {
 
   openToast (message, type) {
     this.toast.open(message, type)
+  }
+
+  openLoader (message) {
+    this.loader.open (message);
+  }
+
+  closeLoader () {
+    this.loader.close ();
   }
 }
 

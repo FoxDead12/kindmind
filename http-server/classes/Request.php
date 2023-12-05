@@ -1,7 +1,9 @@
 <?php
+  error_reporting(0);
 
   include 'exceptions/server-exception.php';
   include 'Mailer.php';
+  include 'Token.php';
 
   class Request {
     public $db;
@@ -9,11 +11,13 @@
     public $response;
     public $body;
     protected $mailer;
+    protected $token_manager;
     protected $env;
 
     public function __construct($method) {
       $this->response = new stdClass();
       $this->mailer = new Mailer();
+      $this->token_manager = new Token('AHSDHASDHASHDAHSDHAHDSAAS');
       $this->body = file_get_contents('php://input');
       $this->body = json_decode($this->body);
       $this->method = $method;
@@ -91,6 +95,10 @@
     private function setEnv () {
       $this->env = new stdClass();
       $this->env->url_front = 'http://localhost:5173/';
+    }
+
+    protected function generate_token () {
+
     }
   }
 
