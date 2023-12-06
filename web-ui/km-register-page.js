@@ -209,7 +209,7 @@ export class Register extends LitElement {
         </div>
 
         <div class="sub-container">
-          <h2><span>Change your future</span> now<br>width <span>kindmind!</span></h2>
+          <h2><span>Change your future</span> now<br>with <span>kindmind!</span></h2>
 
           <div class="row">
             <simple-input id="name" type="text" placeholder="Your name" required></simple-input>
