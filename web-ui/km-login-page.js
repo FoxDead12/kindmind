@@ -11,6 +11,7 @@ export class Login extends LitElement {
 
   static styles = css `
     :host {
+      overflow: hidden;
       display: block;
       position: relative;
       width: 100vw;
