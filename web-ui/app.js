@@ -149,7 +149,9 @@ export class App extends LitElement {
     try {
       if (this.session_data.token === undefined || this.session_data.token === '') {throw new Error ('You need to log in to the platform!')}
 
-      const result = await this.executeJob('GET', '/auth/validation.php', 3000)
+      const result = await this.executeJob('GET', '/auth/validation.php', 3000);
+
+      this.session_data = {...this.session_data, ...result.body}
     } catch (e) {
       this.openToast(e.message, 'error')
       await new Promise(resolve => setTimeout(resolve, 1000));

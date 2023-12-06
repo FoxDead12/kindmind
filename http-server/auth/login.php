@@ -12,7 +12,7 @@
 				return $this->send_message('Invalid data!!', 400);
 			}
 
-			$result = $this->db->execute_query('SELECT email, hash, id FROM users WHERE email = ?', [$email]);
+			$result = $this->db->execute_query('SELECT email, hash, id FROM users WHERE email = ? AND activate = 1', [$email]);
 
 			if ($result->num_rows === 0) {
 				return $this->send_message('There is no account with this email!', 400);

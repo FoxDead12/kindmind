@@ -116,7 +116,8 @@
       $payload = $this->token_manager->decode_token($token);
       $email = $payload->email;
 
-      $result = $this->db->execute_query('SELECT id FROM users where email = ?', [$email]);
+      $result = $this->db->execute_query('SELECT id FROM users where email = ? AND activate = 1', [$email]);
+
       if ($result->num_rows !== 1) {
         $this->send_message('No permissions to execute order!', 405);
       }
