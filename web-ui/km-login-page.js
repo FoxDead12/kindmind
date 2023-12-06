@@ -120,6 +120,22 @@ export class Login extends LitElement {
       color: var(--color-black);
     }
 
+    .link {
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+      font-size: 0.9rem;
+      text-align: center;
+      border-bottom: 1px solid black;
+      margin: 0px auto;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .link:hover {
+      color: var(--color-blue);
+      border-bottom: 1px solid var(--color-blue);
+    }
+
     @media only screen and (max-width: 950px) {
       form {
         width: 90%;
@@ -157,6 +173,10 @@ export class Login extends LitElement {
       width: 100vw;
       height: 100vh;
     }
+
+    .register-link {
+      text-align: center;
+    }
   `
 
   render() {
@@ -171,10 +191,12 @@ export class Login extends LitElement {
 
           <div class="row">
             <simple-checkbox id="session" >Keep me logged in!</simple-checkbox>
-            <simple-link>Forget password?</simple-link>
+            <simple-link href="/">Forget password?</simple-link>
           </div>
 
           <simple-button @click=${this.__buttonClick}>Login</simple-button>
+          <simple-link class="register-link" href="/register">Don't have an account?</simple-link>
+
         </div>
 
         <div class="sub-container">
@@ -184,17 +206,52 @@ export class Login extends LitElement {
     `
   }
 
-  async __buttonClick (e) {
+  validate () {
+    var isValid = true;
+    var inputs = this.shadowRoot.querySelectorAll('simple-input')
+    inputs.forEach (input => {
+      if (input.value === '' && !input.value) {
+        input.invalid = true
+        isValid = false
+      }
+    })
 
+    if (isValid === false) {
+      app.openToast('Fill in all the necessary fields!', 'error')
+    }
+
+    return isValid
+  }
+
+
+  async __buttonClick (e) {
+    const valid = this.validate()
+    if (valid === false) return;
+
+    app.openLoader('Validating your login!');
     const email = this.shadowRoot.getElementById('email').value
     const password = this.shadowRoot.getElementById('password').value
     const session = this.shadowRoot.getElementById('session').checked
-
+    let IsError = false;
     try {
       const result = await app.executeJob('POST', '/auth/login.php', 3000, {email, password, session});
-      console.log(result)
+      app.openToast(result.message, 'success')
+
+      //SAVE TOKEN IN COOKIES AND SESSION
+      app.session_data.token = result.body.token;
+      app.setTokenCookie(result.body.token)
     } catch (e) {
       console.error(e)
+      IsError = true
+      app.openToast(e.message, 'error')
+    }
+
+    app.closeLoader();
+
+    if (IsError === false) {
+      //Redirect after two seconds
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      app.changeRoute('/home');
     }
   }
 }
