@@ -50,7 +50,7 @@
       }
     }
 
-    protected function send_message ($message, $code, $flush = true, $body = null) {
+    protected function send_message ($message, $code, $body = null) {
       $this->response->message = $message;
       $this->response->code = $code;
       if ($body) {

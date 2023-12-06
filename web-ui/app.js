@@ -13,6 +13,8 @@ export class App extends LitElement {
     this.url = window.location.pathname;
     this.urlHost = window.location.origin; // PROD
     this.urlHost = 'http://localhost:8000' // DEV
+
+    this.session_data = {}
   }
 
   firstUpdated () {
@@ -110,6 +112,13 @@ export class App extends LitElement {
   changeRoute (to) {
     this.url = to;
     window.history.pushState("", "", to)
+  }
+
+  setTokenCookie (token) {
+    var d = new Date();
+    d.setTime(d.getTime() + (24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = "token=" + token + ";" + expires + ";path=/";
   }
 }
 
