@@ -3,6 +3,7 @@ import './components/inputs/simple-input'
 import './components/inputs/simple-checkbox'
 import './components/actions/simple-button'
 import './components/actions/simple-link'
+import './components/actions/simple-link'
 
 export class Register extends LitElement {
 
@@ -189,6 +190,10 @@ export class Register extends LitElement {
       width: 100vw;
       height: 100vh;
     }
+
+    simple-link {
+      text-align: center;
+    }
   `
 
   constructor() {
@@ -230,7 +235,7 @@ export class Register extends LitElement {
 
           <simple-button @click=${this.__buttonClick}>Create account</simple-button>
 
-          <span class="link" @click=${this.__linkClick}>Already have an account?</span>
+          <simple-link href="/login">Already have an account?</simple-link>
         </div>
       </form>
     `
@@ -257,8 +262,10 @@ export class Register extends LitElement {
       isValid = false
     }
 
+    // TODO VALIDARE TOW PASSWORDS
+
     if (isValid === false) {
-      app.openToast('Preencha todos os campos necessarios!', 'error')
+      app.openToast('Fill in all the necessary fields!', 'error')
     }
 
     return isValid
@@ -299,10 +306,6 @@ export class Register extends LitElement {
     }
 
     app.closeLoader();
-  }
-
-  __linkClick (e) {
-    app.changeRoute('/login');
   }
 }
 

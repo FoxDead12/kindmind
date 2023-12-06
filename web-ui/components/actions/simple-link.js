@@ -3,9 +3,7 @@ import { LitElement, css, html } from 'lit'
 export class SimpleLink extends LitElement {
 
   static properties = {
-    type: { type: String },
-    placeholder: { type: String },
-    required: { type: Boolean }
+    href: { type: String }
   }
 
   constructor() {
@@ -32,17 +30,32 @@ export class SimpleLink extends LitElement {
       color: var(--color-blue);
       border-bottom: 1px solid var(--color-blue);
     }
+
+    .link {
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+      font-size: 0.9rem;
+      text-align: center;
+      border-bottom: 1px solid black;
+      margin: 0px auto;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .link:hover {
+      color: var(--color-blue);
+      border-bottom: 1px solid var(--color-blue);
+    }
   `
 
   render() {
     return html`
-      <span @click=${this.__changeUrl}>${this.innerHTML}</span>
+      <span @click=${this.__changeUrl} class="link">${this.innerHTML}</span>
     `
   }
 
   __changeUrl () {
-    // TODO
-    console.log("change url")
+    app.changeRoute(this.href);
   }
 }
 
