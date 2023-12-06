@@ -13,8 +13,11 @@
     protected $mailer;
     protected $token_manager;
     protected $env;
+    protected $payload_token;
+    private $protected;
 
-    public function __construct($method) {
+    public function __construct($method, $protected = false) {
+      $this->protected = $protected;
       $this->response = new stdClass();
       $this->mailer = new Mailer();
       $this->token_manager = new Token('AHSDHASDHASHDAHSDHAHDSAAS');
@@ -29,6 +32,7 @@
       try {
         $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
         $this->validateRequest(); # Validate if request is the same method defined
+        if ($this->protected === true) {$this->check_token();}
         $this->execute(); # Execute code of children class
       } catch (ServerException $e) {
         $this->send_message($e->getMessage(), $e->getCode());
@@ -74,8 +78,18 @@
     }
 
     private function setHeader () {
-      header('Access-Control-Allow-Origin: *');
       header('Content-Type: application/json');
+      header('Access-Control-Allow-Origin: *');
+      header('Access-Control-Allow-Credentials: true');
+      header('Access-Control-Allow-Methods: POST, PUT, PATCH, GET, DELETE, OPTIONS');
+      header('Access-Control-Allow-Headers: *');
+
+      if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+        http_response_code(200);
+        die();
+      }
     }
 
     private function setEnv () {
@@ -87,8 +101,28 @@
       $message = print_r($data, true);
       error_log($message);
     }
+
+    private function check_token () {
+      $headers = getallheaders();
+      if (!array_key_exists('Authorization', $headers)) {
+        $this->send_message('No permissions to execute order!', 405);
+      }
+
+      if (substr($headers['Authorization'], 0, 7) !== 'Bearer ') {
+        $this->send_message('No permissions to execute order!', 405);
+      }
+
+      $token = trim(substr($headers['Authorization'], 6));
+      $payload = $this->token_manager->decode_token($token);
+      $email = $payload->email;
+
+      $result = $this->db->execute_query('SELECT id FROM users where email = ?', [$email]);
+      if ($result->num_rows !== 1) {
+        $this->send_message('No permissions to execute order!', 405);
+      }
+
+      $this->payload_token = $payload;
+    }
   }
 
 ?>
-
-

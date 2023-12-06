@@ -15,6 +15,10 @@ export class App extends LitElement {
     this.urlHost = 'http://localhost:8000' // DEV
 
     this.session_data = {}
+    const token = this.getCookie('token')
+    if (token) {
+      this.session_data.token = token
+    }
   }
 
   firstUpdated () {
@@ -53,6 +57,10 @@ export class App extends LitElement {
         import ('./km-activate-page');
         component = html `<km-activate-page></km-activate-page>`
         break;
+      case '/home':
+        import ('./km-home-page');
+        component = html `<km-home-page></km-home-page>`
+        break;
     }
 
     return component;
@@ -66,8 +74,8 @@ export class App extends LitElement {
       xhr.timeout = timeout
       xhr.open(method, url);
 
-      if (method === 'POST') {
-        // xhr.setRequestHeader("Content-Type", "application/json");
+      if (this.session_data.token !== undefined && this.session_data.token !== '') {
+        xhr.setRequestHeader('Authorization', "Bearer " + this.session_data.token);
       }
 
       xhr.onreadystatechange = () => {
@@ -119,6 +127,34 @@ export class App extends LitElement {
     d.setTime(d.getTime() + (24*60*60*1000));
     var expires = "expires=" + d.toGMTString();
     document.cookie = "token=" + token + ";" + expires + ";path=/";
+  }
+
+  getCookie (cookie_name) {
+    let name = cookie_name + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  async validateSession () {
+    try {
+      if (this.session_data.token === undefined || this.session_data.token === '') {throw new Error ('You need to log in to the platform!')}
+
+      const result = await this.executeJob('GET', '/auth/validation.php', 3000)
+    } catch (e) {
+      this.openToast(e.message, 'error')
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      document.location.href = '/login'
+    }
   }
 }
 
