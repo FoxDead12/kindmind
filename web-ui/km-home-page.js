@@ -4,6 +4,7 @@ import './km-header-dashboard'
 export class Home extends LitElement {
 
   static properties = {
+    url: {type: String },
     loading: { type: Boolean }
   }
 
@@ -34,6 +35,7 @@ export class Home extends LitElement {
     return html `
       <km-header-dashboard .navigation=${this._headers}></km-header-dashboard>
       <section id="section">
+        ${this.__subRoutes()}
       </section>
     `
   }
@@ -44,10 +46,25 @@ export class Home extends LitElement {
     this._headers = sessionData
     app.closeLoader();
     this.loading = false;
+
+    // Render item route
+
   }
 
-  __generateComponent () {
-    
+  __subRoutes () {
+    const route = this.url
+    let component = ''
+
+    this._headers.map (header => {
+      if (header.route === route && header.component) {
+        import ('./' + header.component + '.js')
+        const element = document.createElement(header.component)
+        component = element
+        component = html `${component}`
+      }
+    })
+
+    return component
   }
 }
 window.customElements.define('km-home-page', Home)

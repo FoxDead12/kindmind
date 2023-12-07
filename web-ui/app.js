@@ -61,9 +61,12 @@ export class App extends LitElement {
 
     if (this.url.includes('/km')) {
       import ('./km-home-page');
-      component = html `<km-home-page></km-home-page>`
+      component = html `<km-home-page .url=${this.url}></km-home-page>`
     }
 
+    if (component === '') {
+      console.log("404")
+    }
 
     return component;
   }

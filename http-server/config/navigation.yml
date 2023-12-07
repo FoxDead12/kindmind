@@ -18,6 +18,7 @@ professores:
   name: Professores
   icon: groupPeople
   route: /km/professores
+  component: km-professores-page
   role: [0]
 messages:
   name: Messages
