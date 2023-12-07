@@ -57,14 +57,20 @@ export class Home extends LitElement {
 
     this._headers.map (header => {
       if (header.route === route && header.component) {
-        import ('./' + header.component + '.js')
-        const element = document.createElement(header.component)
-        component = element
-        component = html `${component}`
+        component = this.__pagesEnableToRender(header.component)
       }
     })
 
     return component
+  }
+
+  __pagesEnableToRender (component) {
+    switch (component) {
+      case 'km-professores-page':
+        import ('./km-professores-page')
+        return html `<km-professores-page></km-professores-page>`
+        break
+    }
   }
 }
 window.customElements.define('km-home-page', Home)
