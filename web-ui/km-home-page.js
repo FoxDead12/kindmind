@@ -26,16 +26,14 @@ export class Home extends LitElement {
     super ();
     this.loading = true;
     this._load()
-    this._role = null
   }
 
   render () {
     if (this.loading === true) return;
 
     return html `
-      <km-header-dashboard .user_role=${this._role} ></km-header-dashboard>
-      <section>
-        ${this.children}
+      <km-header-dashboard .navigation=${this._headers}></km-header-dashboard>
+      <section id="section">
       </section>
     `
   }
@@ -43,9 +41,13 @@ export class Home extends LitElement {
   async _load () {
     app.openLoader('Validating your session!');
     const sessionData = await app.validateSession();
-    this._role = sessionData.role
+    this._headers = sessionData
     app.closeLoader();
     this.loading = false;
+  }
+
+  __generateComponent () {
+    
   }
 }
 window.customElements.define('km-home-page', Home)

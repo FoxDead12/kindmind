@@ -8,7 +8,7 @@ import {groupPeople} from './svgs/user-group'
 
 export class KmHeaderDashboard extends LitElement {
   static properties = {
-    user_role: { type: Int8Array }
+    navigation: { type: Array }
   }
 
   static styles = css `
@@ -122,17 +122,14 @@ export class KmHeaderDashboard extends LitElement {
     super ();
   }
 
-  update(changedProperties) {
-    if (this.setRole !== true) {
-      super.update(changedProperties)
-    }
+  firstUpdated () {
+    this.__generateHeader()
   }
 
   render () {
     return html `
       <div class="container">
-        <ul>
-          ${this._generateHeader()}
+        <ul id="list">
         </ul>
 
         <div class="user-content">
@@ -143,54 +140,45 @@ export class KmHeaderDashboard extends LitElement {
     `
   }
 
-  _generateHeader () {
-    let component = ''
+  __generateHeader () {
+    const parent = this.shadowRoot.getElementById('list');
+    this.navigation.map (ng => {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      const p = document.createElement('p');
 
-    this.setRole = true
-    switch (Number(this.user_role)) {
-      case 1:
-        component = html `
-          <li>
-            <span>${home}</span>
-            <p>Profile</p>
-          </li>
-          <li>
-            <span>${calendar}</span>
-            <p>Schedule</p>
-          </li>
-          <li>
-            <span>${people}</span>
-            <p>Students</p>
-          </li>
-          <li>
-            <span>${message}</span>
-            <p>Messages</p>
-          </li>
-        `
-      break;
-      case 0:
-        component = html `
-          <li>
-            <span>${home}</span>
-            <p>Profile</p>
-          </li>
-          <li>
-            <span>${groupPeople}</span>
-            <p @click=${() => app.changeRout('/nx/professor')}>Professores</p>
-          </li>
-          <li>
-            <span>${calendar}</span>
-            <p>Schedule</p>
-          </li>
-          <li>
-            <span>${message}</span>
-            <p>Messages</p>
-          </li>
-        `
-      break;
+      li.appendChild(span);
+      li.appendChild(p);
+      p.innerText = ng.name
+
+      switch (ng.icon) {
+        case 'home':
+          span.innerHTML = home.strings
+          break;
+        case 'calendar':
+          span.innerHTML = calendar.strings
+          break;
+        case 'people':
+          span.innerHTML = people.strings
+          break;
+        case 'message':
+          span.innerHTML = message.strings
+          break;
+        case 'groupPeople':
+          span.innerHTML = groupPeople.strings
+          break;
+      }
+
+      li.addEventListener('click', this.__clickHeader)
+      li.href = ng.route
+      parent.appendChild(li)
+    })
+  }
+
+  __clickHeader (e) {
+    if (e.currentTarget.href) {
+      app.changeRoute(e.currentTarget.href)
     }
-
-    return component
   }
 }
 window.customElements.define('km-header-dashboard', KmHeaderDashboard)

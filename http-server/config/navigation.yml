@@ -1,0 +1,26 @@
+---
+profile:
+  name: Profile
+  icon: home
+  route: /km/profile
+  role: [0, 1]
+students:
+  name: Students
+  icon: people
+  route: /km/students
+  role: [1]
+schedule:
+  name: Schedule
+  icon: calendar
+  route: /km/schedule
+  role: [0, 1]
+professores:
+  name: Professores
+  icon: groupPeople
+  route: /km/professores
+  role: [0]
+messages:
+  name: Messages
+  icon: message
+  route: /km/messages
+  role: [0, 1]

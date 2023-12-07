@@ -1,6 +1,8 @@
 <?php
   include '../classes/Request.php';
 
+  use Symfony\Component\Yaml\Yaml;
+
   class Validation extends Request {
     public function execute () {
 
@@ -12,7 +14,21 @@
         $user = $row;
       }
 
-      $this->send_message('Valid session!', 200, $user);
+      $file_navigation = Yaml::parse(file_get_contents('../config/navigation.yml'), Yaml::PARSE_OBJECT_FOR_MAP);
+
+      $navigation_headers = [];
+      foreach ($file_navigation as &$navigation) {
+        if (in_array($user['role'], $navigation->role)) {
+          array_push ($navigation_headers, $navigation);
+        }
+      }
+
+      $body = [
+        "user" => $user,
+        "headers" => $navigation_headers # USER HEADER HAS PERMISSION
+      ];
+
+      $this->send_message('Valid session!', 200, $body);
     }
   }
 

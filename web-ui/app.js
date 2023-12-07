@@ -57,16 +57,13 @@ export class App extends LitElement {
         import ('./km-activate-page');
         component = html `<km-activate-page></km-activate-page>`
         break;
-      case '/nx/professor':
-        import ('./km-home-page');
-        import ('./km-professores-page');
-          component = html `
-            <km-home-page>
-              <km-professores-page></km-professores-page>
-            </km-home-page>
-          `
-        break;
     }
+
+    if (this.url.includes('/km')) {
+      import ('./km-home-page');
+      component = html `<km-home-page></km-home-page>`
+    }
+
 
     return component;
   }
@@ -156,8 +153,8 @@ export class App extends LitElement {
 
       const result = await this.executeJob('GET', '/auth/validation.php', 3000);
 
-      this.session_data = {...this.session_data, ...result.body}
-      return result.body
+      this.session_data = {...this.session_data, ...result.body.user}
+      return result.body.headers
     } catch (e) {
       this.openToast(e.message, 'error')
       await new Promise(resolve => setTimeout(resolve, 1000));
