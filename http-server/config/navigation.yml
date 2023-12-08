@@ -15,7 +15,7 @@ schedule:
   route: /km/schedule
   role: [0, 1]
 professores:
-  name: Professores
+  name: Teachers
   icon: groupPeople
   route: /km/professores
   component: km-professores-page

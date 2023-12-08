@@ -14,13 +14,12 @@ export class KmHeaderDashboard extends LitElement {
   static styles = css `
     :host {
       position: relative;
-      background: #fff;
       width: 100%;
     }
 
     .container {
-      width: 800px;
-      margin: 22px auto;
+      width: 1200px;
+      margin: 12px auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -64,22 +63,34 @@ export class KmHeaderDashboard extends LitElement {
       justify-content: start;
       align-items: center;
       cursor: pointer;
+      transition: 300ms;
+    }
+
+    li h4 {
+      font-size: 1.3rem;
+      margin: 0px;
+      padding: 0px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--color-blue);
     }
 
     li p {
       z-index: 1;
       margin: 0px;
       padding: 0px;
-      color: var(--color-black);
+      color: #333;
       font-family: 'Nunito', sans-serif;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     li svg {
       z-index: 1;
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
+      color: #333;
     }
 
     li span {
@@ -130,6 +141,9 @@ export class KmHeaderDashboard extends LitElement {
     return html `
       <div class="container">
         <ul id="list">
+          <li>
+            <h4>KindMind</h4>
+          </li>
         </ul>
 
         <div class="user-content">

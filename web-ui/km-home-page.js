@@ -15,11 +15,16 @@ export class Home extends LitElement {
       height: 100%;
       display: flex;
       flex-direction: column;
+      background: #fff;
     }
 
     section {
-      width: 800px;
-      margin: 0px auto;
+      margin: 0px;
+      padding: 0px;
+      height: 100%;
+      display: flex;
+      overflow-x: auto;
+      margin-top: 25px;
     }
   `
 
@@ -46,9 +51,6 @@ export class Home extends LitElement {
     this._headers = sessionData
     app.closeLoader();
     this.loading = false;
-
-    // Render item route
-
   }
 
   __subRoutes () {
