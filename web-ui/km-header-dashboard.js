@@ -125,7 +125,7 @@ export class KmHeaderDashboard extends LitElement {
     }
 
     .user-image > svg {
-      color: var(--color-black);
+      color: #333;
     }
   `
 
@@ -147,8 +147,11 @@ export class KmHeaderDashboard extends LitElement {
         </ul>
 
         <div class="user-content">
-          <img class="user-image" src="https://www.upwork.com/profile-portraits/c1suxN8lNHIVHLSdWrZSD3EssUCtNOIq2Ogfkt2exMHN8Kd_RkcFJapqlxjKmlbVkq"/>
-          <!-- <span class="user-image">${user}</span> -->
+          ${app.session_data.image_url ? html `
+            <img class="user-image" src="https://www.upwork.com/profile-portraits/c1suxN8lNHIVHLSdWrZSD3EssUCtNOIq2Ogfkt2exMHN8Kd_RkcFJapqlxjKmlbVkq"/>
+          ` : html `
+            <span class="user-image">${user}</span>
+          `}
         </div>
       </div>
     `

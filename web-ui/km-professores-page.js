@@ -25,6 +25,9 @@ export class Professores extends LitElement {
 
     .filter-container {
       padding: 0px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .filter-container h5 {
@@ -68,6 +71,10 @@ window.customElements.define('km-professores-page', Professores)
 
 
 class ProfessorCard extends LitElement {
+
+  static properties = {
+    data: { type: Object }
+  }
 
   static styles = css `
     :host {
@@ -199,27 +206,33 @@ class ProfessorCard extends LitElement {
           <div class="skill">Álgebra</div>
           <div class="skill">Fisica</div>
           <div class="skill">Inteligencia Artificial</div>
-          <div class="skill">12+</div>
         </div>
       </a>
     `
   }
 
   __skillListManager () {
-    const list = this.shadowRoot.getElementById('skills-list');
-    const widthList = list.offsetWidth
-    const widthLastItem =  list.children[ list.children.length - 1].offsetWidth
-    let currentWidth = 0
-    const array = [...list.children]
-    array.pop()
+    const widthList = this.shadowRoot.getElementById('skills-list').offsetWidth;
+    const lastItemWidth = 61; // MAX WIDTH OF LAST ELEMENT
+    let diffWidth = widthList - lastItemWidth - (this.shadowRoot.getElementById('skills-list').children.length * 8)
+    let array = [...this.shadowRoot.getElementById('skills-list').children]
 
+    let count = this.shadowRoot.getElementById('skills-list').children.length
     for (const children of array) {
-      const tempSum = currentWidth + children.offsetWidth
-      if (tempSum >= (widthList - widthLastItem)) {
+      const temp = diffWidth - children.offsetWidth;
+      if (temp < 0) {
         children.classList.add('hidden')
+      } else {
+        count--
       }
-      currentWidth += children.offsetWidth
+
+      diffWidth -= children.offsetWidth
     }
+
+    const div = document.createElement('div')
+    div.innerHTML = count + '+'
+    div.classList.add('skill')
+    this.shadowRoot.getElementById('skills-list').appendChild(div)
   }
 }
 window.customElements.define('professor-card', ProfessorCard)

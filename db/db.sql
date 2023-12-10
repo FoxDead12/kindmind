@@ -1,0 +1,51 @@
+DROP TABLE users;
+DROP TABLE teacher_info;
+
+
+CREATE TABLE subjects (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE location (
+  id INT NOT NULL AUTO_INCREMENT,
+  country VARCHAR(50) NOT NULL,
+  city VARCHAR(50) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT,
+  email VARCHAR(255) NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  hash TEXT NOT NULL,
+  role INT NOT NULL,
+  activate TINYINT(1) DEFAULT 0,
+  image_url TEXT DEFAULT NULL,
+  location_id VARCHAR(50) DEFAULT NULL,
+  create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (location_id) REFERENCES location(id)
+);
+
+CREATE TABLE teacher_subjects (
+  id INT NOT NULL AUTO_INCREMENT,
+  id_user INT NOT NULL,
+  id_subject INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user) REFERENCES users(id),
+  FOREIGN KEY (id_skill) REFERENCES skills(id)
+);
+
+CREATE TABLE teacher_info (
+  id INT NOT NULL AUTO_INCREMENT,
+  id_user INT NOT NULL,
+  hour_payment FLOAT NOT NULL,
+  description VARCHAR(255) DEFAULT NULL,
+  tsv tsvector DEFAULT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user) REFERENCES users(id)
+);

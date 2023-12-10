@@ -24,7 +24,8 @@ export class Home extends LitElement {
       height: 100%;
       display: flex;
       overflow-x: auto;
-      margin-top: 25px;
+      padding-top: 25px;
+      background: rgba(69, 123, 157, 0.06);
     }
   `
 
@@ -71,7 +72,9 @@ export class Home extends LitElement {
       case 'km-professores-page':
         import ('./km-professores-page')
         return html `<km-professores-page></km-professores-page>`
-        break
+      case 'km-profile-page':
+        import ('./km-profile-page.js');
+        return html `<km-profile-page></km-profile-page>`
     }
   }
 }

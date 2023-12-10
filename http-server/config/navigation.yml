@@ -3,6 +3,7 @@ profile:
   name: Profile
   icon: home
   route: /km/profile
+  component: km-profile-page
   role: [0, 1]
 students:
   name: Students

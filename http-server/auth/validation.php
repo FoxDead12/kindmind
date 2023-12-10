@@ -8,7 +8,7 @@
 
       $email = $this->payload_token->email;
 
-      $user_result = $this->db->execute_query('SELECT full_name, email, role FROM users where email = ?', [$email]);
+      $user_result = $this->db->execute_query('SELECT full_name, email, role, image_url FROM users where email = ?', [$email]);
       $user = null;
       while ($row = $user_result->fetch_assoc()) {
         $user = $row;
