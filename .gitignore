@@ -27,3 +27,4 @@ tmp/*
 .byebug_history
 
 vendor/
+uploads/profiles
