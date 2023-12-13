@@ -56,13 +56,16 @@ export class FieldEditImage extends LitElement {
         value: file.body.file_name
       })
       app.openToast(result.message, 'success')
+
+      setTimeout(() => {
+        location.reload();
+      }, 1500)
     } catch (e) {
       app.openToast(e.message, 'error')
     }
 
     app.closeLoader()
     this.parent.remove()
-    location.reload();
   }
 
   __change (e) {
