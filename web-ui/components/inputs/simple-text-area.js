@@ -1,19 +1,13 @@
 import { LitElement, css, html } from 'lit'
 
-export class SimpleInput extends LitElement {
+class SimpleTextArea extends LitElement {
 
   static properties = {
-    type: { type: String },
     placeholder: { type: String },
     required: { type: Boolean },
     value: { type: String },
-    invalid: { type: Boolean }
-  }
-
-  constructor() {
-    super()
-    this.value = ''
-    this.invalid = false
+    invalid: { type: Boolean },
+    rows: { type: Int8Array }
   }
 
   static styles = css `
@@ -21,11 +15,10 @@ export class SimpleInput extends LitElement {
       display: flex;
     }
 
-    input {
+    textarea {
       float: none;
       position: relative;
       width: 100%;
-      height: 25px;
       padding: 12px 12px;
       font-size: 1rem;
       border: 1px solid #d5d5d5;
@@ -45,20 +38,22 @@ export class SimpleInput extends LitElement {
     }
   `
 
-  render() {
-    let type = this.type
-    if (type === 'date') {
-      type = 'text';
-    }
+  constructor () {
+    super ()
 
-    return html`
-      <input class="${this.invalid === true ? `invalid` : ''}" @change=${this.__change} @keypress=${this.__keypress} @focus=${this.__focus} @blur=${this.__blur} .type=${type} .placeholder=${this.placeholder} ?required=${this.required} value=${this.value} />
+    this.value = ''
+    this.invalid = false
+  }
+
+  render () {
+    return html `
+      <textarea class="${this.invalid === true ? `invalid` : ''}" @keypress=${this.__keypress} @focus=${this.__focus} @blur=${this.__blur} @change=${this.__change} rows="${this.rows}" cols="50" .placeholder=${this.placeholder} .required=${this.required} .value=${this.value}></textarea>
     `
   }
 
   __change (e) {
     this.value = e.currentTarget.value
-    console.log(this.value)
+
     const event = new CustomEvent('change', {
       detail: { value: this.value, input: e.currentTarget},
       bubbles: true,
@@ -88,5 +83,4 @@ export class SimpleInput extends LitElement {
     }
   }
 }
-
-window.customElements.define('simple-input', SimpleInput)
+window.customElements.define('simple-text-area', SimpleTextArea)

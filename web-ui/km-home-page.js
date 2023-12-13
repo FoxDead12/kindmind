@@ -24,7 +24,7 @@ export class Home extends LitElement {
       height: 100%;
       display: flex;
       overflow-x: auto;
-      padding-top: 25px;
+      padding: 25px 0px;
       background: rgba(69, 123, 157, 0.06);
     }
   `

@@ -100,7 +100,7 @@ export class KmHeaderDashboard extends LitElement {
       align-items: center;
     }
 
-    ul li:hover {
+    ul li:hover svg{
       color: var(--color-blue);
     }
 

@@ -101,7 +101,7 @@ export class App extends LitElement {
         reject(new Error('The task took longer than expected, please try again!'));
       };
 
-      if (method === 'POST') {
+      if (method === 'POST' || method === 'PATCH') {
         const json = JSON.stringify(body)
         xhr.send(json);
       } else {

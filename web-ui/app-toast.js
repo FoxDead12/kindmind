@@ -63,6 +63,10 @@ export class AppToast extends LitElement {
       background: #f44336;
     }
 
+    .warning {
+      background: #F6AE2D;
+    }
+
     @keyframes slide-top{0%{transform:translateY(50px)}100%{transform:translateY(0px)}}
   `
 

@@ -8,6 +8,7 @@
   class Request {
     public $db;
     private $method;
+    private $transaction;
     public $response;
     public $body;
     protected $mailer;
@@ -16,14 +17,18 @@
     protected $payload_token;
     private $protected;
 
-    public function __construct($method, $protected = false) {
+    public function __construct($method, $protected = false, $transaction = false) {
       $this->protected = $protected;
       $this->response = new stdClass();
       $this->mailer = new Mailer();
       $this->token_manager = new Token('AHSDHASDHASHDAHSDHAHDSAAS');
       $this->body = file_get_contents('php://input');
       $this->body = json_decode($this->body);
+      if (!$this->body) {
+        $this->body = $_GET;
+      }
       $this->method = $method;
+      $this->transaction = $transaction;
       $this->setHeader();
       $this->setEnv();
     }
@@ -32,11 +37,23 @@
       try {
         $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
         $this->validateRequest(); # Validate if request is the same method defined
+
+        if ($this->transaction === true) {$this->db->begin_transaction();}
+
         if ($this->protected === true) {$this->check_token();}
+
         $this->execute(); # Execute code of children class
+
+        if ($this->transaction === true) {
+          $this->log("COMMIT");
+          $this->db->commit();
+        }
       } catch (ServerException $e) {
+        if ($this->transaction === true) {$this->log("ROLLBACK");$this->db->rollback();}
         $this->send_message($e->getMessage(), $e->getCode());
       } catch (Exception $e) {
+        if ($this->transaction === true) {$this->log("ROLLBACK");$this->db->rollback();}
+        error_log($e->getMessage());
         error_log($e->getTraceAsString());
         $this->send_message("Algo correu mal, tente novamente mais tarde!", 501);
       }
@@ -116,12 +133,21 @@
       $payload = $this->token_manager->decode_token($token);
       $email = $payload->email;
 
-      $result = $this->db->execute_query('SELECT id FROM users where email = ? AND activate = 1', [$email]);
+      $result = $this->db->execute_query('SELECT id, role FROM users where email = ? AND activate = 1', [$email]);
 
       if ($result->num_rows !== 1) {
         $this->send_message('No permissions to execute order!', 405);
       }
 
+      $id = null;
+      $role = null;
+      while ($row = $result->fetch_assoc()) {
+        $id = $row['id'];
+        $role = $row['role'];
+      }
+
+      $payload->id = $id;
+      $payload->role = $role;
       $this->payload_token = $payload;
     }
   }

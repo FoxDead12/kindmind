@@ -1,9 +1,18 @@
 import { LitElement, css, html } from 'lit'
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { user } from './svgs/user'
 import { location } from './svgs/location'
 import { pencil } from './svgs/pencil'
-
+import { pc } from './svgs/pc'
+import { book } from './svgs/book'
+import { euro } from './svgs/euro'
+import { close } from './svgs/close'
+import './components/actions/simple-button';
 export class KmProfile extends LitElement {
+
+  static properties = {
+    load: {type: Boolean}
+  }
 
   static styles = css `
     :host {
@@ -50,6 +59,8 @@ export class KmProfile extends LitElement {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 16px;
     }
 
     .container > .list-skills > li {
@@ -57,8 +68,19 @@ export class KmProfile extends LitElement {
       color: #333;
       border: 1px solid var(--color-blue);
       color: var(--color-blue);
+      font-weight: 600;
       padding: 8px 16px;
       border-radius: 50px;
+    }
+
+    .list-skills.red {
+
+    }
+
+    .list-skills.red > li {
+      border: none;
+      color: white;
+      background:  var(--color-red);
     }
 
     .row {
@@ -74,6 +96,10 @@ export class KmProfile extends LitElement {
 
     .container.first {
       display: flex;
+    }
+
+    .container.first > div {
+      width: 100%;
     }
 
     .user-image {
@@ -109,6 +135,7 @@ export class KmProfile extends LitElement {
     }
 
     .location-info {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: start;
@@ -123,10 +150,11 @@ export class KmProfile extends LitElement {
       font-family: 'Nunito', sans-serif;
       margin-left: 4px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .sub-title-row {
+      position: relative;
       font-family: 'Nunito', sans-serif;
       font-weight: 600;
       font-size: 1.3rem;
@@ -136,88 +164,364 @@ export class KmProfile extends LitElement {
       font-weight: bold;
     }
 
-    .sub-title-row  > span {
-    }
-
-    .icon {
-      position: relative;
+    .content-row {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.2rem;
       display: flex;
-      width: 17px;
-      height: 17px;
-      border: 2px solid var(--color-blue);
-      color: var(--color-blue);
-      border-radius: 32px;
-      padding: 4px;
-      margin-left: 12px;
-      cursor: pointer;
+      margin: 0px;
+      padding: 0px;
+      margin-top: 8px;
     }
 
-    .icon > svg {
-      stroke-width: 2;
+    .icon-attribute {
+      display: flex;
+      position: relative;
+      width: 24px;
+      height: 24px;
+      color: rgb(126, 141, 151);
+      color: var(--color-blue);
+      margin-right: 8px;
+    }
+
+    .edit-container {
+      position: absolute;
+      display: flex;
+      width: 24px;
+      height: 24px;
+      right: 0px;
+      top: 0px;
+      color: var(--color-blue);
+      cursor: pointer;
+      border-radius: 50px;
+    }
+
+    .image-container {
+      position: relative;
+    }
+
+    .edit-container-image {
     }
   `
 
   constructor () {
     super ()
+    this.__loadUser()
   }
 
   render () {
+    if (this.load === true) return
+
     return html `
       <div class="container first">
-        ${app.session_data.image_url ? html `
+        <span class="image-container">
+          ${app.session_data.image_url ? html `
           <img class="user-image" src="https://www.upwork.com/profile-portraits/c1suxN8lNHIVHLSdWrZSD3EssUCtNOIq2Ogfkt2exMHN8Kd_RkcFJapqlxjKmlbVkq"/>
-        ` : html `
+          ` : html `
           <span class="user-image">${user}</span>
-        `}
+          `}
+          <div class="edit-container" @click="${this.__openEditMenu}" field="location" >${pencil}</div>
+        </span>
+
 
         <div>
-          <h5 class="user-name">David Jose da Costa Xavier</h5>
+          <h5 class="user-name">${this.data.full_name}</h5>
           <div class="location-info">
             <span class="location-icon">
               ${location}
             </span>
-            <h5>Portugal, Porto</h5>
+            <h5>${this.data.location ? this.data.location : 'NOT SET'} <div class="edit-container" @click="${this.__openEditMenu}" field="location" >${pencil}</div></h5>
           </div>
         </div>
       </div>
+      ${app.session_data.role === 1 ? html `
+        <div class="row">
+          <div class="container">
+            <h4 class="sub-title-row">Online / Remote: <div class="edit-container" @click="${this.__openEditMenu}" field="online" >${pencil}</div></h4>
+            <p class="content-row"><span class="icon-attribute">${pc}</span>${this.data.teacher.online === 1 ? 'Yes' : 'No'}</p>
+            <br/><br/>
+            <h4 class="sub-title-row">Presencial: <div class="edit-container" @click="${this.__openEditMenu}" field="presencial" >${pencil}</div></h4>
+            <p class="content-row"><span class="icon-attribute">${book}</span>${this.data.teacher.presencial === 1 ? 'Yes' : 'No'}</p>
+            <br/><br/>
+            <h4 class="sub-title-row">Hour / Class: <div class="edit-container" @click="${this.__openEditMenu}" field="payment" >${pencil}</div></h4>
+            <p class="content-row"><span class="icon-attribute">${euro}</span>${this.data.teacher.payment ? this.data.teacher.payment + '€' : 'NOT SET'}</p>
+            <br/>
+          </div>
 
-      <div class="container">
-          <h4 class="sub-title">Description <span class="icon">${pencil}</span></h4>
-          <p class="content">É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica. Logo, o uso de Lorem Ipsum leva a uma distribuição mais ou menos normal de letras, ao contrário do uso de "Conteúdo aqui, conteúdo aqui", tornando-o texto legível. Muitas ferramentas de publicação electrónica e editores de páginas web usam actualmente o Lorem Ipsum como o modelo de texto usado por omissão, e uma pesquisa por "lorem ipsum" irá encontrar muitos websites ainda na sua infância. Várias versões têm evoluído ao longo dos anos, por vezes por acidente, por vezes propositadamente (como no caso do humor).</p>
+          <div class="container">
+            <h4 class="sub-title">About Me <div class="edit-container" @click="${this.__openEditMenu}" field="about" >${pencil}</div></h4>
+            <p class="content">${this.data.teacher.description ? this.data.teacher.description : ''}</p>
 
-          <br><br>
-          <h4 class="sub-title">Skills <span class="icon">${pencil}</span></h4>
-          <ul class="list-skills">
-            <li>Matematica</li>
-            <li>Matematica</li>
-            <li>Matematica</li>
-            <li>Matematica</li>
-            <li>Matematica</li>
+            <br/>
+            <h4 class="sub-title">Subjects <div class="edit-container">${pencil}</div></h4>
+            <ul class="list-skills">
+              <li>Matematica</li>
+              <li>Matematica</li>
+              <li>Matematica</li>
+              <li>Matematica</li>
+              <li>Matematica</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="container">
+          <h4 class="sub-title">About Class <div class="edit-container" @click="${this.__openEditMenu}" field="about-class" >${pencil}</div></h4>
+          <p class="content">${this.data.teacher.about_class ? this.data.teacher.about_class : ''}</p>
+          <br/>
+          <h4 class="sub-title">Education Levels <div class="edit-container">${pencil}</div></h4>
+          <ul class="list-skills red">
+            <li>1º Ciclo</li>
+            <li>2º Ciclo</li>
+            <li>3º Ciclo</li>
+            <li>4º Ciclo</li>
+            <li>5º Ciclo</li>
           </ul>
         </div>
-
-      <!-- <div class="row">
-        <div class="container">
-          <h4 class="sub-title-row">Hour/Class: <span>12€<span></h4>
-        </div>
-
-        <div class="container">
-          <h4 class="sub-title">Description</h4>
-          <p class="content">É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica. Logo, o uso de Lorem Ipsum leva a uma distribuição mais ou menos normal de letras, ao contrário do uso de "Conteúdo aqui, conteúdo aqui", tornando-o texto legível. Muitas ferramentas de publicação electrónica e editores de páginas web usam actualmente o Lorem Ipsum como o modelo de texto usado por omissão, e uma pesquisa por "lorem ipsum" irá encontrar muitos websites ainda na sua infância. Várias versões têm evoluído ao longo dos anos, por vezes por acidente, por vezes propositadamente (como no caso do humor).</p>
-
-          <br><br>
-          <h4 class="sub-title">Skills</h4>
-          <ul class="list-skills">
-            <li>Matematica</li>
-            <li>Matematica</li>
-            <li>Matematica</li>
-            <li>Matematica</li>
-            <li>Matematica</li>
-          </ul>
-        </div>
-
-      </div> -->
+      ` : ''}
     `
   }
+
+  async __loadUser () {
+    this.load = true
+    app.openLoader('Getting your data!')
+    try {
+      const result = await app.executeJob('GET', '/profile/user.php', 3000);
+      this.data = result.body
+    } catch (e) {
+      if (e.code >= 300) {
+        app.openToast(e.message, 'warning')
+      } else {
+        app.openToast(e.message, 'error')
+      }
+    }
+
+    app.closeLoader()
+    this.load = false
+  }
+
+  __openEditMenu (e) {
+    const element = document.createElement('km-edit-field-profile')
+    element.fieldName = e.currentTarget.getAttribute('field');
+    element.updateParent = this.__loadUser.bind(this)
+    this.shadowRoot.appendChild(element);
+  }
+
 }
 window.customElements.define('km-profile-page', KmProfile)
+
+class WizardEditField extends LitElement {
+
+  static properties = {
+    fieldName: { type: String },
+    updateParent: { type: Function },
+    _title: { type: String },
+    _description: { type: String }
+  }
+
+  static styles = css `
+    .container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0, .5);
+
+      left: 0px;
+      top: 0px;
+      z-index: 9;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form {
+      position: relative;
+      background: white;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0px 0px 10px 5px rgba(69,123,159,0.1);
+      width: 700px;
+    }
+
+    h5 {
+      position: relative;
+      margin: 0px;
+      padding: 0px;
+      font-size: 2rem;
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+    }
+
+    p {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      color: rgb(126, 141, 151);
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: end;
+      margin-top: 25px;
+    }
+
+    simple-button {
+      width: 250px;
+    }
+
+    .close-button {
+      display: flex;
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      right: -10px;
+      top: -10px;
+      background: white;
+      border-radius: 50px;
+      padding: 2px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .close-button:hover {
+      color: var(--color-blue);
+    }
+  `
+
+  constructor () {
+    super ()
+
+    this._fieldsEdit = {
+      about: {
+        title: 'Profile overview',
+        description: "Use this space to show clients you have the skills and experience they're looking for.<ul><li>Describe your strengths and skills</li><li>Highlight projects, accomplishments and education</li><li>Keep it short and make sure it's error-free</li></ul>"
+      },
+      location: {
+        title: 'Edit Your Location',
+        description: 'Indicate your location to find out your nationality and the area of in-person classes'
+      },
+      payment: {
+        title: 'Change hourly rate',
+        description: 'Enter the amount you will receive per hour.'
+      },
+      presencial: {
+        title: 'Change your presencial class status',
+        description: 'Tell if you give face-to-face classes or not.'
+      },
+      online: {
+        title: 'Change your online class status',
+        description: 'Tell if you give online classes or not.'
+      },
+      about_class: {
+        title: 'Class overview',
+        description: "Use this space to show clients about your job.<ul><li>How do you plan classes</li><li>Study plan for the client</li><li>How to lead the class</li></ul>"
+      }
+    }
+
+    app.openLoader('Getting data field!')
+  }
+
+  firstUpdated () {
+    this.__setField()
+
+    window.addEventListener('keydown', (e) => {
+      switch (e.keyCode) {
+        case 27:
+          this.remove();
+        break;
+      }
+    }, true)
+  }
+
+  render () {
+    return html `
+      <div class="container" id="container">
+        <div class="form">
+          <div class="close-button" @click=${() => this.remove()}>${close}</div>
+
+          <h5>${this._title}</h5>
+          <p>${unsafeHTML(this._description)}</p>
+          <div id="content"></div>
+
+          <div class="button-container">
+            <simple-button @click="${this.__onClick}">Save</simple-button>
+          </div>
+        </div>
+      </div>
+    `
+  }
+
+  __setField () {
+    switch (this.fieldName) {
+      case 'about':
+        this._title = this._fieldsEdit.about.title
+        this._description = this._fieldsEdit.about.description
+        this.__loadComponent('field-edit-about')
+        break
+      case 'location':
+        this._title = this._fieldsEdit.location.title
+        this._description = this._fieldsEdit.location.description
+        this.__loadComponent('field-edit-location')
+        break
+      case 'payment':
+        this._title = this._fieldsEdit.payment.title
+        this._description = this._fieldsEdit.payment.description
+        this.__loadComponent('field-edit-payment')
+        break
+      case 'presencial':
+        this._title = this._fieldsEdit.presencial.title
+        this._description = this._fieldsEdit.presencial.description
+        this.__loadComponent('field-edit-presencial')
+        break
+      case 'online':
+        this._title = this._fieldsEdit.online.title
+        this._description = this._fieldsEdit.online.description
+        this.__loadComponent('field-edit-online')
+        break
+      case 'about-class':
+        this._title = this._fieldsEdit.about_class.title
+        this._description = this._fieldsEdit.about_class.description
+        this.__loadComponent('field-edit-about-class')
+        break
+    }
+  }
+
+  __loadComponent (comp) {
+    let element
+    switch (comp) {
+      case 'field-edit-about':
+        import ('./edit-fields/edit-about')
+        element = document.createElement('field-edit-about')
+      break
+      case 'field-edit-location':
+        import ('./edit-fields/edit-location')
+        element = document.createElement('field-edit-location')
+        break;
+      case 'field-edit-payment':
+        import ('./edit-fields/edit-payment')
+        element = document.createElement('field-edit-payment')
+        break;
+      case 'field-edit-presencial':
+        import ('./edit-fields/edit-presencial')
+        element = document.createElement('field-edit-presencial')
+        break;
+      case 'field-edit-online':
+        import ('./edit-fields/edit-online')
+        element = document.createElement('field-edit-online')
+        break;
+      case 'field-edit-about-class':
+        import ('./edit-fields/edit-about-class')
+        element = document.createElement('field-edit-about-class')
+        break;
+
+    }
+
+    element.parent = this
+    this.element = element
+    this.shadowRoot.getElementById('content').appendChild(element)
+  }
+
+  async __onClick (e) {
+    await this.element.save()
+    await this.updateParent()
+  }
+}
+window.customElements.define('km-edit-field-profile', WizardEditField)

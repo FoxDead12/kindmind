@@ -1,5 +1,3 @@
-
-
 CREATE TABLE subjects (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
@@ -37,11 +35,12 @@ CREATE TABLE users (
 CREATE TABLE teacher_information (
     id INT NOT NULL AUTO_INCREMENT,
     id_user INT NOT NULL,
-    hour_payment FLOAT NOT NULL,
-    description TEXT NOT NULL,
-    about_class TEXT NOT NULL,
-    online TINYINT(1) NOT NULL,
-    presencial TINYINT(1) NOT NULL,
+    hour_payment FLOAT DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    about_class TEXT DEFAULT NULL,
+    online TINYINT(1) DEFAULT NULL,
+    presencial TINYINT(1) DEFAULT NULL,
+    valid TINYINT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
