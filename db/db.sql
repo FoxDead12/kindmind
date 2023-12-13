@@ -14,8 +14,10 @@ CREATE TABLE locations (
     id INT NOT NULL AUTO_INCREMENT,
     country VARCHAR(50) NOT NULL,
     city VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FULLTEXT (country, city)
 );
+
 
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT,

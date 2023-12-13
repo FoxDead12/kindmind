@@ -35,7 +35,9 @@ class FieldEditAboutClass extends LitElement {
   async _load () {
     try {
       const result = await app.executeJob('GET', '/profile/field.php?field=about-class', 3000);
-      this.value = result.body.value
+      if (result.body) {
+        this.value = result.body.value
+      }
     } catch (e) {
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')
@@ -66,7 +68,7 @@ class FieldEditAboutClass extends LitElement {
   async save () { // NECESSARY
 
     const isValid = this.validate()
-    if (!isValid) return
+    if (!isValid) return false
 
     app.openLoader('Saving data!')
     try {
@@ -81,6 +83,8 @@ class FieldEditAboutClass extends LitElement {
 
     app.closeLoader()
     this.parent.remove()
+
+    return true
   }
 }
 window.customElements.define('field-edit-about-class', FieldEditAboutClass)

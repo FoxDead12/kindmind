@@ -34,7 +34,9 @@ export class FieldEditPayment extends LitElement {
   async _load () {
     try {
       const result = await app.executeJob('GET', '/profile/field.php?field=payment', 3000);
-      this.value = result.body.value
+      if (result.body) {
+        this.value = result.body.value
+      }
     } catch (e) {
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')
@@ -55,6 +57,7 @@ export class FieldEditPayment extends LitElement {
       isValid = false
     }
 
+    debugger
     if (isValid === false) {
       app.openToast('Fill in all the necessary fields!', 'error')
     }
@@ -64,7 +67,7 @@ export class FieldEditPayment extends LitElement {
 
   async save () {
     const isValid = this.validate()
-    if (!isValid) return
+    if (!isValid) return false
 
     app.openLoader('Saving data!')
 
@@ -80,6 +83,8 @@ export class FieldEditPayment extends LitElement {
 
     app.closeLoader()
     this.parent.remove()
+
+    return true
   }
 }
 window.customElements.define('field-edit-payment', FieldEditPayment)

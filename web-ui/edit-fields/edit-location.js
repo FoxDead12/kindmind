@@ -35,13 +35,12 @@ export class FieldEditLocation extends LitElement {
     try {
       const result = await app.executeJob('GET', '/profile/field.php?field=location', 3000);
 
-      if (result?.body?.value) {
+      if (result.body) {
         this.value = result.body.value
       }
 
       this.options = result.body.options
     } catch (e) {
-      console.log(e)
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')
       } else {
@@ -70,7 +69,7 @@ export class FieldEditLocation extends LitElement {
 
   async save () {
     const isValid = this.validate()
-    if (!isValid) return
+    if (!isValid) return false
 
     app.openLoader('Saving data!')
     try {
@@ -85,6 +84,8 @@ export class FieldEditLocation extends LitElement {
 
     app.closeLoader()
     this.parent.remove()
+
+    return true
   }
 }
 window.customElements.define('field-edit-location', FieldEditLocation)

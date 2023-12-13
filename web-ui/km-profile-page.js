@@ -111,6 +111,8 @@ export class KmProfile extends LitElement {
       box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.1);
       cursor: pointer;
       background: transparent;
+      object-fit: cover;
+
     }
 
     .user-image > svg {
@@ -199,7 +201,10 @@ export class KmProfile extends LitElement {
       position: relative;
     }
 
-    .edit-container-image {
+    .edit-container.image {
+      top: calc(100% - 25px);
+      background: white;
+      padding: 4px;
     }
   `
 
@@ -215,11 +220,11 @@ export class KmProfile extends LitElement {
       <div class="container first">
         <span class="image-container">
           ${app.session_data.image_url ? html `
-          <img class="user-image" src="https://www.upwork.com/profile-portraits/c1suxN8lNHIVHLSdWrZSD3EssUCtNOIq2Ogfkt2exMHN8Kd_RkcFJapqlxjKmlbVkq"/>
+          <img class="user-image" src="${app.session_data.image_url}" width="88" height="88"/>
           ` : html `
           <span class="user-image">${user}</span>
           `}
-          <div class="edit-container" @click="${this.__openEditMenu}" field="location" >${pencil}</div>
+          <div class="edit-container image" @click="${this.__openEditMenu}" field="image" >${pencil}</div>
         </span>
 
 
@@ -413,6 +418,10 @@ class WizardEditField extends LitElement {
       about_class: {
         title: 'Class overview',
         description: "Use this space to show clients about your job.<ul><li>How do you plan classes</li><li>Study plan for the client</li><li>How to lead the class</li></ul>"
+      },
+      image: {
+        title: 'Change profile picture',
+        description: ""
       }
     }
 
@@ -481,6 +490,11 @@ class WizardEditField extends LitElement {
         this._description = this._fieldsEdit.about_class.description
         this.__loadComponent('field-edit-about-class')
         break
+      case 'image':
+        this._title = this._fieldsEdit.image.title
+        this._description = this._fieldsEdit.image.description
+        this.__loadComponent('field-edit-image')
+        break
     }
   }
 
@@ -511,7 +525,10 @@ class WizardEditField extends LitElement {
         import ('./edit-fields/edit-about-class')
         element = document.createElement('field-edit-about-class')
         break;
-
+      case 'field-edit-image':
+        import ('./edit-fields/edit-image')
+        element = document.createElement('field-edit-image')
+        break
     }
 
     element.parent = this
@@ -520,8 +537,8 @@ class WizardEditField extends LitElement {
   }
 
   async __onClick (e) {
-    await this.element.save()
-    await this.updateParent()
+    const result = await this.element.save()
+    if (result) await this.updateParent()
   }
 }
 window.customElements.define('km-edit-field-profile', WizardEditField)

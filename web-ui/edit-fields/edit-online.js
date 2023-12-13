@@ -26,7 +26,10 @@ export class FieldEditOnline extends LitElement {
   async _load () {
     try {
       const result = await app.executeJob('GET', '/profile/field.php?field=online', 3000);
-      this.value = result.body.value
+      if (result.body) {
+        this.value = result.body.value
+      }
+
     } catch (e) {
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')

@@ -58,7 +58,6 @@ export class SimpleInput extends LitElement {
 
   __change (e) {
     this.value = e.currentTarget.value
-    console.log(this.value)
     const event = new CustomEvent('change', {
       detail: { value: this.value, input: e.currentTarget},
       bubbles: true,

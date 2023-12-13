@@ -34,6 +34,8 @@
               $body = ['value' => $row['online']]; break;
             case 'about-class':
               $body = ['value' => $row['about_class']]; break;
+            case 'image':
+              $body = ['value' => $row['image_url']]; break;
           }
         }
 

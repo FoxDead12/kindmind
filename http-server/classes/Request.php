@@ -112,6 +112,7 @@
     private function setEnv () {
       $this->env = new stdClass();
       $this->env->url_front = 'http://localhost:5173/';
+      $this->env->url_env = 'http://localhost:8000/';
     }
 
     protected function log ($data) {

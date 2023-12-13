@@ -30,6 +30,8 @@
             $this->update_online($value, $id_user); break;
           case 'about-class':
             $this->update_about_class($value, $id_user); break;
+          case 'image':
+            $this->update_image($value, $id_user); break;
         default:
           throw new ServerException('Field doesn`t existe!', 404);
       }
@@ -74,6 +76,10 @@
         return $this->send_message("This user don't contain this data!", 400);
       }
       $this->db->execute_query("UPDATE teacher_information SET about_class = ? WHERE id_user = ? ", [$value, $id_user]);
+    }
+
+    private function update_image ($value, $id_user) {
+      $this->db->execute_query("UPDATE users SET image_url = ? WHERE id = ? ", [$value, $id_user]);
     }
   }
 
