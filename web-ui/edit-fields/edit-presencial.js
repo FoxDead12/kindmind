@@ -57,6 +57,8 @@ export class FieldEditPresencial extends LitElement {
 
     app.closeLoader()
     this.parent.remove()
+
+    return true
   }
 }
 window.customElements.define('field-edit-presencial', FieldEditPresencial)

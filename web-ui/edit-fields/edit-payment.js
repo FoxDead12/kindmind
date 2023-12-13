@@ -57,7 +57,6 @@ export class FieldEditPayment extends LitElement {
       isValid = false
     }
 
-    debugger
     if (isValid === false) {
       app.openToast('Fill in all the necessary fields!', 'error')
     }

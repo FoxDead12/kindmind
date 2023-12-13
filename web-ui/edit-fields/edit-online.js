@@ -58,6 +58,9 @@ export class FieldEditOnline extends LitElement {
 
     app.closeLoader()
     this.parent.remove()
+
+    return true
+
   }
 }
 window.customElements.define('field-edit-online', FieldEditOnline)
