@@ -251,7 +251,7 @@ export class Login extends LitElement {
     if (IsError === false) {
       //Redirect after two seconds
       await new Promise(resolve => setTimeout(resolve, 1000));
-      app.changeRoute('/km/home');
+      app.changeRoute('/km/profile');
     }
   }
 }

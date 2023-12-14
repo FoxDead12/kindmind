@@ -18,7 +18,6 @@ export class FieldEditImage extends LitElement {
     input {
       float: none;
       position: relative;
-      width: 100%;
       height: 25px;
       padding: 12px 12px;
       font-size: 1rem;
@@ -47,12 +46,13 @@ export class FieldEditImage extends LitElement {
     }
 
     img {
-      background: #eee;
+      background: #d4d4d4;
       border-radius: 50%;
       overview: hidden;
       border: none;
       outline: none;
       object-fit: cover;
+      box-shadow: 0px 0px 10px 5px rgba(69,123,159,0.1);
     }
   `
 

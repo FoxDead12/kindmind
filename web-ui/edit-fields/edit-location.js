@@ -39,7 +39,7 @@ export class FieldEditLocation extends LitElement {
         this.value = result.body.value
       }
 
-      this.options = result.body.options
+      this.options = []
     } catch (e) {
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')
