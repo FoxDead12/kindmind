@@ -8,6 +8,54 @@ export class FieldEditImage extends LitElement {
     parent: { type: LitElement },
   }
 
+  static styles = css `
+
+    :host {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      float: none;
+      position: relative;
+      width: 100%;
+      height: 25px;
+      padding: 12px 12px;
+      font-size: 1rem;
+      border: 1px solid #d5d5d5;
+      border-radius: 5px;
+      outline-color: var(--color-blue);
+      font-family: 'Nunito', sans-serif;
+      color: var(--color-black);
+    }
+
+    .invalid {
+      outline-color: var(--color-red);
+      border: 1px solid var(--color-red);
+    }
+
+    input::placeholder {
+      color: #333;
+    }
+
+    div {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    img {
+      background: #eee;
+      border-radius: 50%;
+      overview: hidden;
+      border: none;
+      outline: none;
+      object-fit: cover;
+    }
+  `
+
   constructor () {
     super ()
     this.load = true
@@ -19,9 +67,13 @@ export class FieldEditImage extends LitElement {
     if (this.load === true) return
 
     return html `
-      <input accept="image/*" type="file" @change=${this.__change}/>
-
-      <img id="img"/>
+      <input id="data" accept="image/*" type="file" @change=${this.__change}/>
+      <div>
+        <img class="img" width="128" height="128"/>
+        <img class="img" width="60" height="60"/>
+        <img class="img" width="40" height="40"/>
+        <img class="img" width="32" height="32"/>
+      </div>
     `
   }
 
@@ -43,7 +95,25 @@ export class FieldEditImage extends LitElement {
     this.load = false
   }
 
+  validate () {
+    let isValid = true
+
+    if (!this.file || this.file === null || this.file == '') {
+      this.shadowRoot.getElementById('data').invalid = true
+      isValid = false
+    }
+
+    if (isValid === false) {
+      app.openToast('Need select a picture first!', 'error')
+    }
+
+    return isValid
+  }
+
   async save () {
+    const valid = this.validate()
+    if (!valid) return false
+
     app.openLoader('Saving data!')
     try {
       const formData = new FormData();
@@ -72,7 +142,9 @@ export class FieldEditImage extends LitElement {
     const [file] = e.currentTarget.files
     if (file) {
       this.file = file
-      this.shadowRoot.getElementById('img').src = URL.createObjectURL(file)
+      this.shadowRoot.querySelectorAll('.img').forEach(img => {
+        img.src = URL.createObjectURL(file)
+      })
     }
 
   }

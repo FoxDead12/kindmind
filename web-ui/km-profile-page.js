@@ -257,7 +257,7 @@ export class KmProfile extends LitElement {
             <p class="content">${this.data.teacher.description ? this.data.teacher.description : ''}</p>
 
             <br/>
-            <h4 class="sub-title">Subjects <div class="edit-container">${pencil}</div></h4>
+            <h4 class="sub-title">Subjects <div class="edit-container" @click="${this.__openEditMenu}" field="subjects">${pencil}</div></h4>
             <ul class="list-skills">
               <li>Matematica</li>
               <li>Matematica</li>
@@ -422,6 +422,10 @@ class WizardEditField extends LitElement {
       image: {
         title: 'Change profile picture',
         description: ""
+      },
+      subjects: {
+        title: 'Select subjects you want teach',
+        description: "Choose the subjects that you feel comfortable teaching, and you can choose to teach the ones you want!"
       }
     }
 
@@ -495,6 +499,11 @@ class WizardEditField extends LitElement {
         this._description = this._fieldsEdit.image.description
         this.__loadComponent('field-edit-image')
         break
+      case 'subjects':
+        this._title = this._fieldsEdit.subjects.title
+        this._description = this._fieldsEdit.subjects.description
+        this.__loadComponent('field-edit-subjects')
+        break
     }
   }
 
@@ -528,6 +537,10 @@ class WizardEditField extends LitElement {
       case 'field-edit-image':
         import ('./edit-fields/edit-image')
         element = document.createElement('field-edit-image')
+        break
+      case 'field-edit-subjects':
+        import ('./edit-fields/edit-subjects')
+        element = document.createElement('field-edit-subjects')
         break
     }
 
