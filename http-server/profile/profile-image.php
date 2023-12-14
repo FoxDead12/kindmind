@@ -4,13 +4,10 @@
   class ProfileImage extends Request {
     public function execute () {
 
-      $this->log($_FILES);
-
       $file = $_FILES['file'];
       if ($file == null || $file == '') {
         return $this->send_message('Invalid data!!', 400);
       }
-
 
       $upload_dir = realpath(getcwd(). DIRECTORY_SEPARATOR . '../../uploads/profiles');
       $file_new = uniqid() . mt_rand() . '.' . $file['name'];

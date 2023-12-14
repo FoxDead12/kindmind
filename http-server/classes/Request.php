@@ -18,46 +18,76 @@
     private $protected;
 
     public function __construct($method, $protected = false, $transaction = false) {
-      $this->protected = $protected;
-      $this->response = new stdClass();
+      # Objects Declarations
       $this->mailer = new Mailer();
       $this->token_manager = new Token('AHSDHASDHASHDAHSDHAHDSAAS');
+      $this->response = new stdClass();
+
+      # Save body data
       $this->body = file_get_contents('php://input');
       $this->body = json_decode($this->body);
       if (!$this->body) {
         $this->body = $_GET;
       }
-      $this->method = $method;
-      $this->transaction = $transaction;
+
+      $this->protected = $protected; # SET IF IS PROTECTED ROUTE
+      $this->method = $method; # SET METHOD OF REQUEST
+      $this->transaction = $transaction; # SET IF REQUEST OPEN A TRANSACTION
+
+      # Execute configuration methods
       $this->setHeader();
       $this->setEnv();
     }
 
     public function request () {
       try {
-        $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind'); # TODO
-        $this->validateRequest(); # Validate if request is the same method defined
+        # Create connection width DB
+        $this->db = new mysqli('localhost:3306', 'kindmind', 'kindmind', 'kindmind');
 
-        if ($this->transaction === true) {$this->db->begin_transaction();}
+        # Validate request is correct
+        $this->validateRequest();
 
-        if ($this->protected === true) {$this->check_token();}
+        # Protect Method
+        if ($this->protected === true) {
+          $this->check_token();
+        }
 
-        $this->execute(); # Execute code of children class
+        # Create Transaction
+        if ($this->transaction === true) {
+          $this->db->begin_transaction();
+        }
 
+        # Execute code of request
+        $this->execute();
+
+        # Commit Transaction
         if ($this->transaction === true) {
           $this->log("COMMIT");
           $this->db->commit();
         }
       } catch (ServerException $e) {
-        if ($this->transaction === true) {$this->log("ROLLBACK");$this->db->rollback();}
+        # Rollback Transaction
+        if ($this->transaction === true) {
+          $this->log("ROLLBACK");
+          $this->db->rollback();
+        }
+
+        # Send controlled error!
         $this->send_message($e->getMessage(), $e->getCode());
       } catch (Exception $e) {
-        if ($this->transaction === true) {$this->log("ROLLBACK");$this->db->rollback();}
+
+        # Rollback Transaction
+        if ($this->transaction === true) {
+          $this->log("ROLLBACK");
+          $this->db->rollback();
+        }
         error_log($e->getMessage());
         error_log($e->getTraceAsString());
+        # Send unexpected error!
         $this->send_message("Algo correu mal, tente novamente mais tarde!", 501);
       }
 
+      # Close connection DB
       $this->db->close();
     }
 
@@ -78,18 +108,14 @@
         $this->response->body = $body;
       }
 
-      // JSON OBJECT
+      # Transform response in json object
       $this->response = json_encode($this->response);
-
+      # Set HTTP response CODE
       http_response_code($code);
-
       ini_set('output_buffering', 'off');
-      // Enable implicit flush
       ob_implicit_flush(true);
-
-      // SET BODY
+      # SEND RESPONSE
       echo $this->response;
-
       flush();
       ob_flush();
     }
@@ -102,6 +128,7 @@
       header('Access-Control-Allow-Headers: *');
 
       if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+        # WHEN METHOD IS OPTIONS WILL ALWAYS RETURN SUCCESS RESPONSE
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
         http_response_code(200);
@@ -121,15 +148,20 @@
     }
 
     private function check_token () {
+      # Get headers from request
       $headers = getallheaders();
+
+      # Check headers hash a Authorization header
       if (!array_key_exists('Authorization', $headers)) {
         $this->send_message('No permissions to execute order!', 405);
       }
 
+      # Check Authorization header is a Bearer
       if (substr($headers['Authorization'], 0, 7) !== 'Bearer ') {
         $this->send_message('No permissions to execute order!', 405);
       }
 
+      # Get token
       $token = trim(substr($headers['Authorization'], 6));
       $payload = $this->token_manager->decode_token($token);
       $email = $payload->email;
@@ -140,17 +172,12 @@
         $this->send_message('No permissions to execute order!', 405);
       }
 
-      $id = null;
-      $role = null;
       while ($row = $result->fetch_assoc()) {
-        $id = $row['id'];
-        $role = $row['role'];
+        $payload->id = $row['id'];
+        $payload->role = $row['role'];
       }
 
-      $payload->id = $id;
-      $payload->role = $role;
       $this->payload_token = $payload;
     }
   }
-
 ?>

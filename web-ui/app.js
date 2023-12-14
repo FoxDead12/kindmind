@@ -88,6 +88,10 @@ export class App extends LitElement {
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve(JSON.parse(xhr.response));
           } else {
+            if (xhr.status === 405) {
+              setTimeout(() => document.location.href = '/login', 1000)
+            }
+
             reject(JSON.parse(xhr.response));
           }
         }
@@ -111,40 +115,6 @@ export class App extends LitElement {
       } else {
         xhr.send();
       }
-    })
-  }
-
-  uploadFile (method, urlLocation, timeout, body) {
-    const url = this.urlHost + urlLocation
-    return new Promise ((resolve, reject) => {
-
-      var xhr = new XMLHttpRequest();
-      xhr.timeout = timeout
-      xhr.open(method, url);
-
-      if (this.session_data.token !== undefined && this.session_data.token !== '') {
-        xhr.setRequestHeader('Authorization', "Bearer " + this.session_data.token);
-      }
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState > 2) {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            resolve(JSON.parse(xhr.response));
-          } else {
-            reject(JSON.parse(xhr.response));
-          }
-        }
-      }
-
-      xhr.onerror = function() {
-        reject(new Error('Something goes wrong communicating with the server, try again later!'));
-      };
-
-      xhr.ontimeout = (e) => {
-        reject(new Error('The task took longer than expected, please try again!'));
-      };
-
-      xhr.send(body);
     })
   }
 

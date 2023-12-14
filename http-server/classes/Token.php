@@ -21,7 +21,7 @@
         $decoded = JWT::decode($token, new Key($this->secret, 'HS256'));
         return $decoded;
       } catch (Exception $e) {
-        throw new ServerException($e->getMessage(), 405);
+        throw new ServerException('The token is no longer valid, its validity period has expired', 405);
       }
     }
   }
