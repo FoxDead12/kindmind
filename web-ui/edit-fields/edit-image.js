@@ -119,7 +119,7 @@ export class FieldEditImage extends LitElement {
       const formData = new FormData();
       formData.append("file", this.file);
 
-      const file = await app.executeJob('POST', '/profile/profile-image.php', 3000, formData)
+      const file = await app.executeJob('POST', '/profile/profile-image.php', 10000, formData)
 
       const result = await app.executeJob('PATCH', '/profile/edit.php', 3000, {
         field: 'image',

@@ -15,6 +15,7 @@ export class KmHeaderDashboard extends LitElement {
     :host {
       position: relative;
       width: 100%;
+      overflow: hidden;
     }
 
     .container {
@@ -24,6 +25,13 @@ export class KmHeaderDashboard extends LitElement {
       justify-content: space-between;
       align-items: center;
     }
+
+    @media only screen and (max-width: 1300px) {
+      .container {
+        width: 100%;
+      }
+    }
+
 
     .title {
       margin: 0px;
