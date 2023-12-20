@@ -12,7 +12,7 @@
             $result = $this->db->execute_query('SELECT * FROM locations WHERE country LIKE (?)',[$field]);
             $body = ['result' => $result->fetch_all()];  
             
-            $this->send_message('', 200, $body)
+            $this->send_message('', 200, $body);
 	}
 }
 
