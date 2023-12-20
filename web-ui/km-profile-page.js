@@ -206,6 +206,34 @@ export class KmProfile extends LitElement {
       background: white;
       padding: 4px;
     }
+
+    @media only screen and (max-width: 950px) {
+      .row {
+        margin: 0px 25px;
+        display: grid;
+        grid-template-columns:  1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 25px;
+      }
+    }
+
+    @media only screen and (max-width: 550px) {
+      .container.first {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        gap: 15px;
+      }
+
+      .user-name {
+        margin-left: 0px;
+      }
+
+      .location-info {
+        margin-left: 0px;
+      }
+    }
   `
 
   constructor () {

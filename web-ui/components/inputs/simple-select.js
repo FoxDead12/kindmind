@@ -91,9 +91,12 @@ export class SimpleSelect extends LitElement {
   firstUpdated () {
     this.__setValue()
     this.__setMaxDrop()
+
   }
 
   render () {
+    if (this.show === true) this.__renderItems();
+
     return html `
       <input class="${this.invalid === true ? `invalid` : ''}" id="input" type="text" .placeholder=${this.placeholder} @keyup=${this.__keypress}  @change=${this.__keypress} />
       <div class="select-container" id="drop-dow">
@@ -101,23 +104,44 @@ export class SimpleSelect extends LitElement {
     `
   }
 
-  __setValue () {
-    if (!this.value && this.value <= 0) return
+  __renderItems () {
+    if (this.items) {
+      this.shadowRoot.getElementById('drop-dow').classList.add('open')
 
-    const item = this.items.filter(item => item[0] === this.value);
-    this.shadowRoot.getElementById('input').value = item[0][1] + ', ' + item[0][2]
+      const parent = this.shadowRoot.getElementById('drop-dow');
+      parent.innerHTML = ''
+      this.items.map (ob => {
+        const item = document.createElement('div')
+        const p = document.createElement('p')
+        item.appendChild(p)
+        item.classList.add('item')
+        item.value = ob.id
+        p.innerHTML = ob.name
+        item.addEventListener('click', this.__selectItem.bind(this))
+        item.addEventListener('mouseenter', () => this.shadowRoot.getElementById('input').blur())
+        parent.appendChild(item)
+      })
+    }
+  }
+
+  __setValue () {
+    if (!this.value || !this.items) return
+
+    const item = this.items.filter(item => item.id === this.value);
+    this.shadowRoot.getElementById('input').value = item.name
   }
 
   __setMaxDrop () {
     const endScreenPosY = window.innerHeight
-    const startPostDropDown = this.shadowRoot.getElementById('drop-dow').getBoundingClientRect().y
+    const startPostDropDown = this.getBoundingClientRect().y
 
-    const maxSize = endScreenPosY - startPostDropDown - 25;
+    const maxSize = endScreenPosY - this.getBoundingClientRect().y - 25 - this.getBoundingClientRect().height;
     this.shadowRoot.getElementById('drop-dow').style.maxHeight = maxSize + "px"
   }
 
   __blur () {
     this.shadowRoot.getElementById('drop-dow').classList.remove('open')
+    this.show = false
   }
 
   __keypress (e) {
@@ -125,43 +149,34 @@ export class SimpleSelect extends LitElement {
       this.invalid = false
     }
 
-    const valueSearch = e.currentTarget.value
-    if (valueSearch && valueSearch !== null && this.items) {
-      var filterItems = this.items.filter(item => {
-        const filter = item[1] + item[2]
-        if (filter.toLowerCase().includes(valueSearch.toLowerCase().replace(' ', '').replace(/[^a-zA-Z0-9 ]/g, ''))) {
-          return true
-        } else {
-          return false
-        }
-      })
-    } else {
-      var filterItems = []
-    }
+    this.show = true
 
-    this.shadowRoot.getElementById('drop-dow').classList.add('open')
+    this.value = e.currentTarget.value
+    const event = new CustomEvent('key-change', {
+      detail: { value: this.value, input: e.currentTarget},
+      bubbles: true,
+      composed: true,
+    });
 
-    const parent = this.shadowRoot.getElementById('drop-dow');
-    parent.innerHTML = ''
-    filterItems.map (location => {
-      const item = document.createElement('div')
-      const p = document.createElement('p')
-      item.appendChild(p)
-      item.classList.add('item')
-      item.value = location[0]
-      p.innerHTML = `${location[1]}, ${location[2]}`
-      item.addEventListener('click', this.__selectItem.bind(this))
-      item.addEventListener('mouseenter', () => this.shadowRoot.getElementById('input').blur())
-      parent.appendChild(item)
-    })
+    this.dispatchEvent(event);
   }
 
   __selectItem (e) {
-    e.preventDefault()
     this.value = e.currentTarget.value
     if (this.value === 0) return
-    const item = this.items.filter(item => item[0] === this.value);
-    this.shadowRoot.getElementById('input').value = item[0][1] + ', ' + item[0][2]
+
+    const [item] = this.items.filter(item => item.id === this.value);
+    this.shadowRoot.getElementById('input').value = item.name
+
+    this.value = e.currentTarget.value
+    const event = new CustomEvent('item-selected', {
+      detail: { item: item, input: e.currentTarget},
+      bubbles: true,
+      composed: true,
+    });
+
+    this.dispatchEvent(event);
+
     this.__blur()
   }
 }
