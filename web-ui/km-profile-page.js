@@ -269,13 +269,13 @@ export class KmProfile extends LitElement {
       ${app.session_data.role === 1 ? html `
         <div class="row">
           <div class="container">
-            <h4 class="sub-title-row">Online / Remote: <div class="edit-container" @click="${this.__openEditMenu}" field="online" >${pencil}</div></h4>
+            <h4 class="sub-title-row">Remote: <div class="edit-container" @click="${this.__openEditMenu}" field="online" >${pencil}</div></h4>
             <p class="content-row"><span class="icon-attribute">${pc}</span>${this.data.teacher.online === 1 ? 'Yes' : 'No'}</p>
             <br/><br/>
             <h4 class="sub-title-row">Presencial: <div class="edit-container" @click="${this.__openEditMenu}" field="presencial" >${pencil}</div></h4>
             <p class="content-row"><span class="icon-attribute">${book}</span>${this.data.teacher.presencial === 1 ? 'Yes' : 'No'}</p>
             <br/><br/>
-            <h4 class="sub-title-row">Hour / Class: <div class="edit-container" @click="${this.__openEditMenu}" field="payment" >${pencil}</div></h4>
+            <h4 class="sub-title-row">Hour: <div class="edit-container" @click="${this.__openEditMenu}" field="payment" >${pencil}</div></h4>
             <p class="content-row"><span class="icon-attribute">${euro}</span>${this.data.teacher.payment ? this.data.teacher.payment + '€' : 'NOT SET'}</p>
             <br/>
           </div>
