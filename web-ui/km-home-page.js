@@ -10,21 +10,23 @@ export class Home extends LitElement {
 
   static styles = css `
     :host {
-      position: absolute;
+      position: relative;
+      display: grid;
       width: 100%;
       height: 100%;
-      display: flex;
-      flex-direction: column;
+      grid-template-rows: 56px auto;
+      grid-template-columns: 100vw;
       background: #fff;
+      overflow-x: hidden;
     }
 
     section {
+      position: relative;
       margin: 0px;
       padding: 0px;
-      height: 100%;
-      display: flex;
-      overflow-x: auto;
-      padding: 0px 0px;
+      display: block;
+      overflow: auto;
+      padding: 25px 0px;
       background: rgba(69, 123, 157, 0.06);
     }
   `

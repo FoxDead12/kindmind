@@ -7,6 +7,18 @@ export class App extends LitElement {
     url: { type: String }
   }
 
+  static styles = css `
+    :host {
+      position: relative;
+      display: block;
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+  `
+
   constructor() {
     super()
     window.app = this;

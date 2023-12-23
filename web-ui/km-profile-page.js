@@ -207,6 +207,12 @@ export class KmProfile extends LitElement {
       padding: 4px;
     }
 
+    @media only screen and (max-width: 1350px) {
+      :host {
+        width: 100%;
+      }
+    }
+
     @media only screen and (max-width: 950px) {
       .row {
         margin: 0px 25px;
