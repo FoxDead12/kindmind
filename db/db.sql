@@ -54,7 +54,8 @@ CREATE TABLE teacher_subjects (
     id_subject INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user) REFERENCES users(id),
-    FOREIGN KEY (id_subject) REFERENCES subjects(id)
+    FOREIGN KEY (id_subject) REFERENCES subjects(id),
+    UNIQUE(id_user, id_subject)
 );
 
 CREATE TABLE teacher_education_level (

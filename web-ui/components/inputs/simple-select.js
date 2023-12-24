@@ -98,7 +98,7 @@ export class SimpleSelect extends LitElement {
     if (this.show === true) this.__renderItems();
 
     return html `
-      <input class="${this.invalid === true ? `invalid` : ''}" id="input" type="text" .placeholder=${this.placeholder} @keyup=${this.__keypress}  @change=${this.__keypress} />
+      <input class="${this.invalid === true ? `invalid` : ''}" id="input" type="text" .placeholder=${this.placeholder} @focus=${this.__focus} @keyup=${this.__keypress}/>
       <div class="select-container" id="drop-dow">
       </div>
     `
@@ -142,6 +142,10 @@ export class SimpleSelect extends LitElement {
   __blur () {
     this.shadowRoot.getElementById('drop-dow').classList.remove('open')
     this.show = false
+  }
+
+  __focus (e) {
+    e.currentTarget.value = ''
   }
 
   __keypress (e) {

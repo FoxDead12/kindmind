@@ -8,7 +8,8 @@ export class FieldEditSubjects extends LitElement {
   static properties = {
     load: { type: Boolean },
     parent: { type: LitElement },
-    options: {type: Array}
+    options: {type: Array},
+    value: {type: Array}
   }
 
   static styles = css `
@@ -23,21 +24,22 @@ export class FieldEditSubjects extends LitElement {
 
     ul {
       position: relative;
-      width: 100%;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       list-style: none;
-      gap: 15px;
-      padding: 12px;
+      gap: 12px;
+      padding: 12px 12px;
+      margin: 0px;
     }
 
     li {
+      overflow: hidden;
       position: relative;
       background: var(--color-blue);
       padding: 8px 12px;
       border-radius: 50px;
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto 22px;
       gap: 4px;
     }
 
@@ -51,10 +53,17 @@ export class FieldEditSubjects extends LitElement {
       text-overflow: ellipsis;
     }
 
+    li span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     li svg {
       color: white;
       width: 22px;
       height: 22px;
+      cursor: pointer;
     }
 
     simple-select {
@@ -88,7 +97,7 @@ export class FieldEditSubjects extends LitElement {
           <ul>
             ${repeat(this.value, (item) => item.id, (item) => {
               return html `
-                <li><p>${item.name}</p> ${close}</li>
+                <li><p>${item.name}</p> <span @click=${this.__removeItem} .item="${item}">${close}</span></li>
               `
             })}
           </ul>
@@ -98,6 +107,12 @@ export class FieldEditSubjects extends LitElement {
 
   async __itemSelect (e) {
     const item = e.detail.item;
+
+    if (this.value.filter(subject => subject.id == item.id).length != 0) {
+      app.openToast('Subject already choose!', 'warning')
+      return
+    }
+
     this.value.push(item)
     this.requestUpdate()
   }
@@ -124,7 +139,13 @@ export class FieldEditSubjects extends LitElement {
     try {
       const result = await app.executeJob('GET', '/profile/field.php?field=subjects', 3000);
       if (result.body) {
-        this.value = result.body.value
+        result.body.value.map(subject => {
+          this.value.push({
+            id: subject[0],
+            name: subject[1]
+          })
+        })
+        console.log(this.value)
       }
 
     } catch (e) {
@@ -135,22 +156,26 @@ export class FieldEditSubjects extends LitElement {
     this.load = false
   }
 
+  __removeItem (e) {
+    const item = e.currentTarget.item;
+    this.value = this.value.filter(subject => subject.id != item.id)
+  }
+
   async save () {
 
-    // app.openLoader('Saving data!')
-    // const state = this.shadowRoot.getElementById('data').checked ? 1 : 0
-    // try {
-    //   const result = await app.executeJob('PATCH', '/profile/edit.php', 3000, {
-    //     field: 'presencial',
-    //     value: state
-    //   })
-    //   app.openToast(result.message, 'success')
-    // } catch (e) {
-    //   app.openToast(e.message, 'error')
-    // }
+    app.openLoader('Saving data!')
+    try {
+      const result = await app.executeJob('PATCH', '/profile/edit.php', 3000, {
+        field: 'subjects',
+        value: this.value
+      })
+      app.openToast(result.message, 'success')
+    } catch (e) {
+      app.openToast(e.message, 'error')
+    }
 
-    // app.closeLoader()
-    // this.parent.remove()
+    app.closeLoader()
+    this.parent.remove()
 
     return true
   }

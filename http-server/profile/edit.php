@@ -32,6 +32,8 @@
             $this->update_about_class($value, $id_user); break;
           case 'image':
             $this->update_image($value, $id_user); break;
+          case 'subjects':
+            $this->update_subjects($value, $id_user); break;
         default:
           throw new ServerException('Field doesn`t existe!', 404);
       }
@@ -80,6 +82,14 @@
 
     private function update_image ($value, $id_user) {
       $this->db->execute_query("UPDATE users SET image_url = ? WHERE id = ? ", [$value, $id_user]);
+    }
+
+    private function update_subjects ($value, $id_user) {
+      $this->db->execute_query("DELETE FROM teacher_subjects WHERE id_user = ?", [$id_user]);
+      $this->log($value);
+      foreach ($value as $subject) {
+        $this->db->execute_query("INSERT INTO teacher_subjects (id_user,id_subject) VALUES (?, ?)", [$id_user, $subject->id]);
+      }
     }
   }
 

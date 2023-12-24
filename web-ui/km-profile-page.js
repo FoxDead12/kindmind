@@ -293,11 +293,11 @@ export class KmProfile extends LitElement {
             <br/>
             <h4 class="sub-title">Subjects <div class="edit-container" @click="${this.__openEditMenu}" field="subjects">${pencil}</div></h4>
             <ul class="list-skills">
-              <li>Matematica</li>
-              <li>Matematica</li>
-              <li>Matematica</li>
-              <li>Matematica</li>
-              <li>Matematica</li>
+              ${this.data.teacher.subjects.map(subject => {
+                return html `
+                  <li>${subject}</li>
+                `
+              })}
             </ul>
           </div>
         </div>
@@ -325,6 +325,7 @@ export class KmProfile extends LitElement {
     try {
       const result = await app.executeJob('GET', '/profile/user.php', 3000);
       this.data = result.body
+      console.log(this.data)
     } catch (e) {
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')

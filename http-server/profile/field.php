@@ -42,7 +42,7 @@
     }
 
     private function get_user_subjects ($id_user) {
-      $subjects = $this->db->execute_query('SELECT * FROM teacher_subjects ts INNER JOIN subjects s ON ts.id_subject = s.id WHERE id_user = ?;', [$id_user]);
+      $subjects = $this->db->execute_query('SELECT s.id, s.name FROM teacher_subjects ts INNER JOIN subjects s ON ts.id_subject = s.id WHERE id_user = ?;', [$id_user]);
       return $subjects->fetch_all();
     }
   }

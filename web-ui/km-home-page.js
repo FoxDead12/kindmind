@@ -20,6 +20,12 @@ export class Home extends LitElement {
       overflow-x: hidden;
     }
 
+    @media only screen and (max-width: 710px) {
+      :host {
+        grid-template-rows: 160px auto;
+      }
+    }
+
     section {
       position: relative;
       margin: 0px;

@@ -16,6 +16,8 @@ export class KmHeaderDashboard extends LitElement {
       position: relative;
       width: 100%;
       overflow: hidden;
+      box-shadow: 0px 0px 50px 10px rgba(0,0,0,0.1);
+      z-index: 1;
     }
 
     .container {
@@ -27,11 +29,15 @@ export class KmHeaderDashboard extends LitElement {
     }
 
     @media only screen and (max-width: 1300px) {
+      :host {
+        display: flex;
+      }
+
       .container {
         width: 100%;
+        margin: 12px 25px;
       }
     }
-
 
     .title {
       margin: 0px;
@@ -60,6 +66,17 @@ export class KmHeaderDashboard extends LitElement {
       gap: 32px;
       margin: 0px;
       padding: 0px;
+    }
+
+    @media only screen and (max-width: 950px) {
+      .container {
+        align-items: flex-start;
+      }
+
+      ul {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
     }
 
     ul li {
@@ -136,6 +153,7 @@ export class KmHeaderDashboard extends LitElement {
     .user-image > svg {
       color: #333;
     }
+
   `
 
   constructor () {

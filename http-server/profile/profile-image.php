@@ -37,7 +37,7 @@
       $upload_dir = $upload_dir . '/' . $file_new;
 
       // Save image in directory
-      imagejpeg($image, $upload_dir, 65);
+      imagejpeg($image, $upload_dir, 50);
 
       // Write URL of image
       $url_out = $this->env->url_env . 'profile/file.php?name=' . $file_new;
