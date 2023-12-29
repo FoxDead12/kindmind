@@ -15,6 +15,7 @@
         }
 
         $subjects = $this->db->execute_query("SELECT s.name as name FROM teacher_subjects ts INNER JOIN users u ON u.id = ts.id_user INNER JOIN subjects s ON s.id = ts.id_subject WHERE u.id = ?", [$id_user]);
+        $levels_education = $this->db->execute_query("SELECT e.name as name FROM teacher_education_level te INNER JOIN users u ON u.id = te.id_user INNER JOIN education_level e ON e.id = te.id_level WHERE u.id = ?", [$id_user]);
 
         $body = [
           "full_name" => $row['full_name'],
@@ -26,7 +27,8 @@
             "about_class" => $row['about_class'],
             "online" => $row['online'],
             "presencial" => $row['presencial'],
-            "subjects" => $subjects->fetch_all()
+            "subjects" => $subjects->fetch_all(),
+            "levels_education" => $levels_education->fetch_all()
           ]
         ];
       }

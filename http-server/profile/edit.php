@@ -34,6 +34,8 @@
             $this->update_image($value, $id_user); break;
           case 'subjects':
             $this->update_subjects($value, $id_user); break;
+          case 'level_education':
+            $this->update_levels_education($value, $id_user); break;
         default:
           throw new ServerException('Field doesn`t existe!', 404);
       }
@@ -86,9 +88,15 @@
 
     private function update_subjects ($value, $id_user) {
       $this->db->execute_query("DELETE FROM teacher_subjects WHERE id_user = ?", [$id_user]);
-      $this->log($value);
       foreach ($value as $subject) {
         $this->db->execute_query("INSERT INTO teacher_subjects (id_user,id_subject) VALUES (?, ?)", [$id_user, $subject->id]);
+      }
+    }
+
+    private function update_levels_education ($value, $id_user) {
+      $this->db->execute_query("DELETE FROM teacher_education_level WHERE id_user = ?", [$id_user]);
+      foreach ($value as $level) {
+        $this->db->execute_query("INSERT INTO teacher_education_level (id_user, id_level) VALUES (?, ?)", [$id_user, $level->id]);
       }
     }
   }

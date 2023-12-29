@@ -59,7 +59,6 @@ export class KmProfile extends LitElement {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      border-bottom: 1px solid #eee;
       padding-bottom: 16px;
     }
 
@@ -306,13 +305,13 @@ export class KmProfile extends LitElement {
           <h4 class="sub-title">About Class <div class="edit-container" @click="${this.__openEditMenu}" field="about-class" >${pencil}</div></h4>
           <p class="content">${this.data.teacher.about_class ? this.data.teacher.about_class : ''}</p>
           <br/>
-          <h4 class="sub-title">Education Levels <div class="edit-container">${pencil}</div></h4>
+          <h4 class="sub-title">Education Levels <div class="edit-container" @click="${this.__openEditMenu}" field="level_education">${pencil}</div></h4>
           <ul class="list-skills red">
-            <li>1º Ciclo</li>
-            <li>2º Ciclo</li>
-            <li>3º Ciclo</li>
-            <li>4º Ciclo</li>
-            <li>5º Ciclo</li>
+            ${this.data.teacher.levels_education.map(level => {
+              return html `
+                <li>${level}</li>
+              `
+            })}
           </ul>
         </div>
       ` : ''}
@@ -325,7 +324,6 @@ export class KmProfile extends LitElement {
     try {
       const result = await app.executeJob('GET', '/profile/user.php', 3000);
       this.data = result.body
-      console.log(this.data)
     } catch (e) {
       if (e.code >= 300) {
         app.openToast(e.message, 'warning')
@@ -461,6 +459,10 @@ class WizardEditField extends LitElement {
       subjects: {
         title: 'Select subjects you want teach',
         description: "Choose the subjects that you feel comfortable teaching, and you can choose to teach the ones you want!"
+      },
+      level_education: {
+        title: 'Select education level you will teach',
+        description: "Choose the level education that you feel comfortable teaching, and you can choose to teach the ones you want!"
       }
     }
 
@@ -539,6 +541,11 @@ class WizardEditField extends LitElement {
         this._description = this._fieldsEdit.subjects.description
         this.__loadComponent('field-edit-subjects')
         break
+      case 'level_education':
+        this._title = this._fieldsEdit.level_education.title
+        this._description = this._fieldsEdit.level_education.description
+        this.__loadComponent('field-edit-level-education')
+        break
     }
   }
 
@@ -576,6 +583,10 @@ class WizardEditField extends LitElement {
       case 'field-edit-subjects':
         import ('./edit-fields/edit-subjects')
         element = document.createElement('field-edit-subjects')
+        break
+      case 'field-edit-level-education':
+        import ('./edit-fields/edit-level-education')
+        element = document.createElement('field-edit-level-education')
         break
     }
 

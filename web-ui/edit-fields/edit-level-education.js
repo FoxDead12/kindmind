@@ -83,7 +83,7 @@ export class FieldEditSubjects extends LitElement {
 
     return html `
       <simple-select
-        placeholder="Select your subjects"
+        placeholder="Select your level education"
         .items=${this.options}
         id="data"
         @key-change=${this.__valueChange}
@@ -104,6 +104,26 @@ export class FieldEditSubjects extends LitElement {
     `
   }
 
+  async _load () {
+    try {
+      const result = await app.executeJob('GET', '/profile/field.php?field=level_education', 3000);
+      if (result.body) {
+        result.body.value.map(level => {
+          this.value.push({
+            id: level[0],
+            name: level[1]
+          })
+        })
+      }
+
+    } catch (e) {
+      app.openToast(e.message, 'error')
+    }
+
+    app.closeLoader()
+    this.load = false
+  }
+
   async __itemSelect (e) {
     const item = e.detail.item;
 
@@ -120,7 +140,7 @@ export class FieldEditSubjects extends LitElement {
     const value = e.detail.value
 
     try {
-      const result = await app.executeJob('GET', '/filter/subjects.php?value=' + value, 3000);
+      const result = await app.executeJob('GET', '/filter/level_education.php?value=' + value, 3000);
       const temp = []
       result.body.result.map (item => {
         temp.push({
@@ -134,37 +154,11 @@ export class FieldEditSubjects extends LitElement {
     }
   }
 
-  async _load () {
-    try {
-      const result = await app.executeJob('GET', '/profile/field.php?field=subjects', 3000);
-      if (result.body) {
-        result.body.value.map(subject => {
-          this.value.push({
-            id: subject[0],
-            name: subject[1]
-          })
-        })
-      }
-
-    } catch (e) {
-      app.openToast(e.message, 'error')
-    }
-
-    app.closeLoader()
-    this.load = false
-  }
-
-  __removeItem (e) {
-    const item = e.currentTarget.item;
-    this.value = this.value.filter(subject => subject.id != item.id)
-  }
-
   async save () {
-
     app.openLoader('Saving data!')
     try {
       const result = await app.executeJob('PATCH', '/profile/edit.php', 3000, {
-        field: 'subjects',
+        field: 'level_education',
         value: this.value
       })
       app.openToast(result.message, 'success')
@@ -178,4 +172,4 @@ export class FieldEditSubjects extends LitElement {
     return true
   }
 }
-window.customElements.define('field-edit-subjects', FieldEditSubjects)
+window.customElements.define('field-edit-level-education', FieldEditSubjects)

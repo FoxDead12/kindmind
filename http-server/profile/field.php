@@ -34,6 +34,10 @@
               $subjects = $this->get_user_subjects($id_user);
               $body = ['value' => $subjects]; break;
               break;
+            case 'level_education':
+              $level = $this->get_user_level_education($id_user);
+              $body = ['value' => $level]; break;
+              break;
           }
         }
       }
@@ -42,8 +46,13 @@
     }
 
     private function get_user_subjects ($id_user) {
-      $subjects = $this->db->execute_query('SELECT s.id, s.name FROM teacher_subjects ts INNER JOIN subjects s ON ts.id_subject = s.id WHERE id_user = ?;', [$id_user]);
+      $subjects = $this->db->execute_query('SELECT s.id, s.name FROM users u INNER JOIN teacher_subjects ts ON u.id = ts.id_user INNER JOIN subjects s ON ts.id_subject = s.id WHERE u.id = ?;', [$id_user]);
       return $subjects->fetch_all();
+    }
+
+    private function get_user_level_education ($id_user) {
+      $level_education = $this->db->execute_query('SELECT el.id, el.name FROM users u INNER JOIN teacher_education_level te ON u.id = te.id_user INNER JOIN education_level el ON te.id_level = el.id WHERE u.id = ?', [$id_user]);
+      return $level_education->fetch_all();
     }
   }
 
