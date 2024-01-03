@@ -66,11 +66,21 @@ export class Home extends LitElement {
     const route = this.url
     let component = ''
 
+    // GET HEADERS ROUTES
     this._headers.map (header => {
       if (header.route === route && header.component) {
         component = this.__pagesEnableToRender(header.component)
       }
     })
+
+    if (component) return component;
+
+    // SET OTHER ROUTES
+    if (route.includes('km/professores/')) {
+      import ('./km-professor-page.js');
+      const id = Number(route.split('/').slice(-1));
+      component =  html `<km-professor-page .id=${id}></km-professor-page>`
+    }
 
     return component
   }

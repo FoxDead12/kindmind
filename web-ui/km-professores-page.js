@@ -1,8 +1,11 @@
 import { LitElement, css, html } from 'lit'
+import {repeat} from 'lit/directives/repeat.js';
+import {user as UserIcon} from './svgs/user'
 
 export class Professores extends LitElement {
 
   static properties = {
+    _items: { type: Array }
   }
 
   static styles = css `
@@ -42,6 +45,8 @@ export class Professores extends LitElement {
   constructor () {
     super ();
 
+    this._items = []
+    this._load()
   }
 
   firstUpdated () {
@@ -52,26 +57,37 @@ export class Professores extends LitElement {
     return html `
       <div class="filter-container">
         <h5>Teachers</h5>
+
+        <div>
+
+        </div>
       </div>
 
       <div class="professores-container">
         <!-- PROFESSORES -->
-        <professor-card></professor-card>
-        <professor-card></professor-card>
-        <professor-card></professor-card>
-        <professor-card></professor-card>
-        <professor-card></professor-card>
-        <professor-card></professor-card>
-        </a>
+        ${repeat(this._items, (professor) => professor.id, (professor) => {
+          return html `
+            <professor-card .data=${professor}></professor-card>
+          `
+        })}
       </div>
     `
+  }
+
+  async _load () {
+    try {
+      const result = await app.executeJob('GET', '/professores/professores.php', 3000);
+      this._items = result.body.result
+    } catch (e) {
+      app.openToast(e.message, 'error')
+    }
+
   }
 }
 window.customElements.define('km-professores-page', Professores)
 
 
 class ProfessorCard extends LitElement {
-
   static properties = {
     data: { type: Object }
   }
@@ -83,6 +99,7 @@ class ProfessorCard extends LitElement {
     }
 
     a {
+      text-decoration: none;
       position: relative;
       width: 100%;
       background: white;
@@ -97,11 +114,16 @@ class ProfessorCard extends LitElement {
       background: rgba(69,123,159,0.1);
     }
 
-    img {
+    img, .icon-user  {
       width: 90px;
       height: 90px;
       border-radius: 50%;
       box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px 5px;
+      object-fit: cover;
+    }
+
+    .icon-user > svg {
+      color: #333;
     }
 
     .container {
@@ -150,8 +172,8 @@ class ProfessorCard extends LitElement {
       font-size: 16px;
       overflow: hidden;
       display: -webkit-box;
-      -webkit-line-clamp: 3; /* number of lines to show */
-      line-clamp: 3;
+      -webkit-line-clamp: 5; /* number of lines to show */
+      line-clamp: 5;
       -webkit-box-orient: vertical;
     }
 
@@ -190,28 +212,36 @@ class ProfessorCard extends LitElement {
 
   render () {
     return html `
-      <a>
+      <a href=${"/km/professores/" + this.data.id} @click=${this._open}>
         <div class="container">
-          <img src="https://www.upwork.com/profile-portraits/c1suxN8lNHIVHLSdWrZSD3EssUCtNOIq2Ogfkt2exMHN8Kd_RkcFJapqlxjKmlbVkq" />
+          ${this.data.image_url ? html `
+            <img src="${this.data.image_url}" />
+          ` : html `
+            <span class="icon-user">${UserIcon}</span>
+          `}
+
           <div>
-            <h4>David Jose da Costa Xavier</h4>
-            <h5>Portugal, Porto</h5>
+            <h4>${this.data.full_name}</h4>
+            <h5>${this.data.country} ${this.data.city}</h5>
           </div>
         </div>
 
-        <p class="description-content">Ensino Matemática, Física e Estatística. Formado na FEUP e MIT em Engenharia Mecânica e Dados c/ experiência como Investigador nas melhores universidades da Alemanha (RWTH, TUM e Darmstadt) Ensino Matemática, Física e Estatística. Formado na FEUP e MIT em Engenharia Mecânica e Dados c/ experiência como Investigador nas melhores universidades da Alemanha (RWTH, TUM e Darmstadt)</p>
+        <p class="description-content">${this.data.description}</p>
 
         <div class="skills-container" id="skills-list">
-          <div class="skill">Matemática</div>
-          <div class="skill">Álgebra</div>
-          <div class="skill">Fisica</div>
-          <div class="skill">Inteligencia Artificial</div>
+          ${this.data.subjects?.map(subject => {
+            return html `
+              <div class="skill">${subject}</div>
+            `
+          })}
         </div>
       </a>
     `
   }
 
   __skillListManager () {
+    if (!this.data.subjects || this.data.subjects.length === 1) return;
+
     const widthList = this.shadowRoot.getElementById('skills-list').offsetWidth;
     const lastItemWidth = 61; // MAX WIDTH OF LAST ELEMENT
     let diffWidth = widthList - lastItemWidth - (this.shadowRoot.getElementById('skills-list').children.length * 8)
@@ -233,6 +263,11 @@ class ProfessorCard extends LitElement {
     div.innerHTML = count + '+'
     div.classList.add('skill')
     this.shadowRoot.getElementById('skills-list').appendChild(div)
+  }
+
+  _open (e) {
+    e.preventDefault()
+    app.changeRoute('/km/professores/' + this.data.id)
   }
 }
 window.customElements.define('professor-card', ProfessorCard)

@@ -9,7 +9,6 @@
         return $this->send_message('Invalid data!!', 400);
       }
 
-      $this->log($search_value);
       $search_value = '%'.$search_value.'%';
       $result = $this->db->execute_query('SELECT * FROM subjects WHERE name LIKE (?)', [$search_value]);
       $body = ['result' => $result->fetch_all()];
