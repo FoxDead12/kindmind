@@ -154,6 +154,11 @@ export class FieldEditSubjects extends LitElement {
     }
   }
 
+  __removeItem (e) {
+    const item = e.currentTarget.item;
+    this.value = this.value.filter(subject => subject.id != item.id)
+  }
+
   async save () {
     app.openLoader('Saving data!')
     try {
