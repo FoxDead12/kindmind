@@ -9,7 +9,7 @@
                 return $this->send_message('Invalid data!!', 400);
               }
             $field = '%'.$field.'%';
-            $result = $this->db->execute_query('SELECT * FROM locations WHERE country LIKE (?)',[$field]);
+            $result = $this->db->execute_query('SELECT * FROM locations WHERE country LIKE (?) AND city LIKE (?)',[$field]);
             $body = ['result' => $result->fetch_all()];  
             
             $this->send_message('', 200, $body);
