@@ -1,8 +1,10 @@
 import { LitElement, css, html } from 'lit'
+import { message as Message, message } from '../../svgs/message'
 
-export class simpleButton extends LitElement {
+export class SimpleButton extends LitElement {
 
   static properties = {
+    icon: { type: String }
   }
 
   constructor() {
@@ -23,6 +25,9 @@ export class simpleButton extends LitElement {
       -moz-transition: background-color 300ms ease-out;
       -o-transition: background-color 300ms ease-out;
       transition: background-color 300ms ease-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .container > span {
@@ -40,18 +45,34 @@ export class simpleButton extends LitElement {
       transition: background-color 300ms ease-out;
     }
 
-    .container:hover > span {
+    .container:hover > span, .container:hover > svg {
       color: var(--color-red);
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+      margin-right: 8px;
     }
   `
 
   render() {
     return html`
-      <button class="container" @click=${this.__onClick}>
+      <button id="button" class="container" @click=${this.__onClick}>
+        ${this._renderIcon()}
         <span>${this.innerHTML}</span>
       </button>
     `
   }
+
+  _renderIcon () {
+    switch (this.icon) {
+      case 'message':
+        return Message;
+        break
+    }
+  }
 }
 
-window.customElements.define('simple-button', simpleButton)
+window.customElements.define('simple-button', SimpleButton)

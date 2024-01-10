@@ -70,11 +70,15 @@ export class KmHeaderDashboard extends LitElement {
 
     @media only screen and (max-width: 950px) {
       .container {
-        align-items: flex-start;
+        width: 100%;
+        margin: 12px 25px;
+        display: grid;
+        grid-template-columns: auto 50px;
+        gap: 10px;
       }
 
       ul {
-        flex-wrap: wrap;
+        overflow: scroll;
         justify-content: flex-start;
       }
     }

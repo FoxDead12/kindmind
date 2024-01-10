@@ -1,6 +1,8 @@
 import { LitElement, css, html } from 'lit'
 import {repeat} from 'lit/directives/repeat.js';
 import {user as UserIcon} from './svgs/user'
+import {filters as FilterIcon} from './svgs/filters'
+import './components/inputs/simple-input'
 
 export class Professores extends LitElement {
 
@@ -40,6 +42,58 @@ export class Professores extends LitElement {
       padding: 0px;
       margin: 0px;
     }
+
+    @media only screen and (max-width: 1300px) {
+      :host {
+        width: 100%;
+      }
+
+      .professores-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media only screen and (max-width: 1200px) {
+      .professores-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .filters-container {
+      display: flex;
+      gap: 24px;
+      position: relative;
+      flex-direction: column;
+    }
+
+    .filters-container .title {
+      background-color: white;
+      font-size: 1rem;
+      padding: 8px 14px;
+      font-family: 'Nunito', sans-serif;
+      border-radius: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .filters-container .title svg {
+      width: 22px;
+      height: 22px;
+      margin-left: 12px;
+    }
+
+    .filter-container:last-child {
+      justify-items: end;
+    }
+
+    .dropdown-filters {
+      position: relative;
+    }
   `
 
   constructor () {
@@ -58,8 +112,15 @@ export class Professores extends LitElement {
       <div class="filter-container">
         <h5>Teachers</h5>
 
-        <div>
+        <div class="filters-container">
+          <!-- Filters // Subjects, Preços, Online, Presencial -->
+          <p class="title">Edit filters ${FilterIcon}</p>
+        </div>
+      </div>
 
+      <div class="filter-container">
+        <div class="dropdown-filters">
+          <simple-input placeholder="Algo"></simple-input>
         </div>
       </div>
 
@@ -75,12 +136,15 @@ export class Professores extends LitElement {
   }
 
   async _load () {
+    app.openLoader('Getting professors!')
+
     try {
       const result = await app.executeJob('GET', '/professores/professores.php', 3000);
       this._items = result.body.result
     } catch (e) {
       app.openToast(e.message, 'error')
     }
+    app.closeLoader()
 
   }
 }

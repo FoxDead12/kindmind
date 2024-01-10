@@ -20,12 +20,6 @@ export class Home extends LitElement {
       overflow-x: hidden;
     }
 
-    @media only screen and (max-width: 710px) {
-      :host {
-        grid-template-rows: 160px auto;
-      }
-    }
-
     section {
       position: relative;
       margin: 0px;
@@ -79,7 +73,7 @@ export class Home extends LitElement {
     if (route.includes('km/professores/')) {
       import ('./km-professor-page.js');
       const id = Number(route.split('/').slice(-1));
-      component =  html `<km-professor-page .id=${id}></km-professor-page>`
+      component =  html `<km-professor-page id=${id}></km-professor-page>`
     }
 
     return component
