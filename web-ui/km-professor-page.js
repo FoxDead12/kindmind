@@ -241,7 +241,7 @@ export class Professor extends LitElement {
             <span class="user-image">${User}</span>
           `}
           <h1 class="professor-name">${this.professor.full_name}</h1>
-          <simple-button icon="message">Contact</simple-button>
+          <simple-button @click=${this.__openContract} icon="message">Contact</simple-button>
         </div>
 
         <div class="sub-container">
@@ -289,6 +289,17 @@ export class Professor extends LitElement {
     }
     this.loading = false;
     app.closeLoader()
+  }
+
+  __openContract () {
+    import ('./km-profile-page.js')
+    const element = document.createElement('km-edit-field-profile')
+    element.fieldName = 'proposal';
+    element.updateParent = null
+    element.data = {
+      id_professor: this.id
+    }
+    this.shadowRoot.appendChild(element);
   }
 }
 window.customElements.define('km-professor-page', Professor)

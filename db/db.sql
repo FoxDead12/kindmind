@@ -88,3 +88,14 @@ CREATE TABLE messages (
     FOREIGN KEY (send_user) REFERENCES users(id),
     FOREIGN KEY (receiver_user) REFERENCES users(id)
 );
+
+CREATE TABLE proposals (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_student INT NOT NULL,
+    id_professor INT NOT NULL,
+    class_time TIMESTAMP DEFAULT NULL,
+    duration INT NOT NULL,
+    message VARCHAR(255) DEFAULT NULL,
+    FOREIGN KEY (id_student) REFERENCES users(id),
+    FOREIGN KEY (id_professor) REFERENCES users(id),
+)

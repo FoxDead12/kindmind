@@ -47,7 +47,7 @@ export class SimpleInput extends LitElement {
 
   render() {
     let type = this.type
-    if (type === 'date') {
+    if (type === 'date' || type === 'time') {
       type = 'text';
     }
 
@@ -71,10 +71,14 @@ export class SimpleInput extends LitElement {
     if (this.type === 'date') {
       e.currentTarget.type = 'date'
     }
+
+    if (this.type === 'time') {
+      e.currentTarget.type = 'time'
+    }
   }
 
   __blur (e) {
-    if (this.type === 'date') {
+    if (this.type === 'date' || this.type === 'time') {
       if (this.value === '') {
         e.currentTarget.type = 'text'
       }

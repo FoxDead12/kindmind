@@ -5,24 +5,24 @@ profile:
   route: /km/profile
   component: km-profile-page
   role: [0, 1]
-students:
-  name: Students
-  icon: people
-  route: /km/students
-  role: [1]
-schedule:
-  name: Schedule
+classes:
+  name: Classes
   icon: calendar
-  route: /km/schedule
-  role: [0, 1]
+  route: /km/classes
+  role: [1]
+contracts:
+  name: Contracts
+  icon: message
+  route: /km/contracts
+  role: [1]
+proposals:
+  name: Proposals
+  icon: message
+  route: /km/proposals
+  role: [0]
 professores:
-  name: Teachers
+  name: Find Teachers
   icon: groupPeople
   route: /km/professores
   component: km-professores-page
   role: [0]
-messages:
-  name: Messages
-  icon: message
-  route: /km/messages
-  role: [0, 1]

@@ -351,6 +351,7 @@ class WizardEditField extends LitElement {
   static properties = {
     fieldName: { type: String },
     updateParent: { type: Function },
+    data: {type: Object},
     _title: { type: String },
     _description: { type: String }
   }
@@ -463,6 +464,10 @@ class WizardEditField extends LitElement {
       level_education: {
         title: 'Select education level you will teach',
         description: "Choose the level education that you feel comfortable teaching, and you can choose to teach the ones you want!"
+      },
+      proposal: {
+        title: 'Send your proposal',
+        description: 'Inquire the data mentioned and send a message writing a little about the class you want.'
       }
     }
 
@@ -546,6 +551,11 @@ class WizardEditField extends LitElement {
         this._description = this._fieldsEdit.level_education.description
         this.__loadComponent('field-edit-level-education')
         break
+      case 'proposal':
+        this._title = this._fieldsEdit.proposal.title
+        this._description = this._fieldsEdit.proposal.description
+        this.__loadComponent('send-proposal')
+        break
     }
   }
 
@@ -588,9 +598,14 @@ class WizardEditField extends LitElement {
         import ('./edit-fields/edit-level-education')
         element = document.createElement('field-edit-level-education')
         break
+      case 'send-proposal':
+        import ('./edit-fields/send-proposal.js')
+        element = document.createElement('send-proposal')
+        break
     }
 
     element.parent = this
+    element.data = this.data
     this.element = element
     this.shadowRoot.getElementById('content').appendChild(element)
   }
