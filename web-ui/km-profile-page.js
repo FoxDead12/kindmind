@@ -351,6 +351,7 @@ class WizardEditField extends LitElement {
   static properties = {
     fieldName: { type: String },
     updateParent: { type: Function },
+    _buttonText: { type: String },
     data: {type: Object},
     _title: { type: String },
     _description: { type: String }
@@ -428,6 +429,8 @@ class WizardEditField extends LitElement {
   constructor () {
     super ()
 
+    this._buttonText = "Save"
+
     this._fieldsEdit = {
       about: {
         title: 'Profile overview',
@@ -497,7 +500,7 @@ class WizardEditField extends LitElement {
           <div id="content"></div>
 
           <div class="button-container">
-            <simple-button @click="${this.__onClick}">Save</simple-button>
+            <simple-button @click="${this.__onClick}" .text=${this._buttonText} ></simple-button>
           </div>
         </div>
       </div>

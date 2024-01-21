@@ -14,10 +14,12 @@ contracts:
   name: Contracts
   icon: message
   route: /km/contracts
+  component: km-contracts-page
   role: [1]
 proposals:
   name: Proposals
   icon: message
+  component: km-proposals-page
   route: /km/proposals
   role: [0]
 professores:

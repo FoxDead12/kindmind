@@ -96,6 +96,23 @@ CREATE TABLE proposals (
     class_time TIMESTAMP DEFAULT NULL,
     duration INT NOT NULL,
     message VARCHAR(255) DEFAULT NULL,
+    activate TINYINT(1) DEFAULT 0,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
     FOREIGN KEY (id_student) REFERENCES users(id),
-    FOREIGN KEY (id_professor) REFERENCES users(id),
-)
+    FOREIGN KEY (id_professor) REFERENCES users(id)
+);
+
+CREATE TABLE proposals_message (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_from_user INT NOT NULL,
+    id_to_user INT NOT NULL,
+    id_proposal INT NOT NULL,
+    message TEXT NOT NULL,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_from_user) REFERENCES users(id),
+    FOREIGN KEY (id_to_user) REFERENCES users(id),
+    FOREIGN KEY (id_proposal) REFERENCES proposals(id)
+);

@@ -4,7 +4,8 @@ import { message as Message, message } from '../../svgs/message'
 export class SimpleButton extends LitElement {
 
   static properties = {
-    icon: { type: String }
+    icon: { type: String },
+    text: { type: String }
   }
 
   constructor() {
@@ -61,7 +62,7 @@ export class SimpleButton extends LitElement {
     return html`
       <button id="button" class="container" @click=${this.__onClick}>
         ${this._renderIcon()}
-        <span>${this.innerHTML}</span>
+        <span>${this.text ? this.text : this.innerHTML}</span>
       </button>
     `
   }

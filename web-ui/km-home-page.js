@@ -37,6 +37,12 @@ export class Home extends LitElement {
     this._load()
   }
 
+  updated () {
+    if (this.shadowRoot.getElementById('section')) {
+      app.currentPage = this.shadowRoot.getElementById('section').children[0]
+    }
+  }
+
   render () {
     if (this.loading === true) return;
 
@@ -87,6 +93,12 @@ export class Home extends LitElement {
       case 'km-profile-page':
         import ('./km-profile-page.js');
         return html `<km-profile-page></km-profile-page>`
+      case 'km-proposals-page':
+        import ('./km-proposals-page.js');
+        return html `<km-proposals-page></km-proposals-page>`
+      case 'km-contracts-page':
+        import ('./km-contracts-page.js');
+        return html `<km-contracts-page></km-contracts-page>`
     }
   }
 }

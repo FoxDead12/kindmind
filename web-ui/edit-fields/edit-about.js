@@ -66,7 +66,6 @@ class FieldEditAbout extends LitElement {
   }
 
   async save () { // NECESSARY
-
     const isValid = this.validate()
     if (!isValid) return false
 

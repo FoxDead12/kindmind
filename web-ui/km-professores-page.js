@@ -103,10 +103,6 @@ export class Professores extends LitElement {
     this._load()
   }
 
-  firstUpdated () {
-    // EXECUTE REQUEST TO GET PROFESSORES
-  }
-
   render () {
     return html `
       <div class="filter-container">

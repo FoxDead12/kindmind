@@ -4,7 +4,8 @@ import './app-loader'
 export class App extends LitElement {
 
   static properties = {
-    url: { type: String }
+    url: { type: String },
+    currentPage: { type: LitElement }
   }
 
   static styles = css `
@@ -25,6 +26,9 @@ export class App extends LitElement {
     this.url = window.location.pathname;
     this.urlHost = window.location.origin; // PROD
     this.urlHost = 'http://localhost:8000' // DEV
+
+    this.urlWebsocket = `ws://${window.location.host}`// PROD
+    this.urlWebsocket = "ws://localhost:8001" // DEV
 
     this.session_data = {}
     const token = this.getCookie('token')
@@ -55,6 +59,7 @@ export class App extends LitElement {
 
     switch (this.url) {
       case '/':
+        // import ('./km-welcome-page')
         component = html ``
         break
       case '/login':
@@ -175,13 +180,74 @@ export class App extends LitElement {
       if (this.session_data.token === undefined || this.session_data.token === '') {throw new Error ('You need to log in to the platform!')}
 
       const result = await this.executeJob('GET', '/auth/validation.php', 3000);
-
       this.session_data = {...this.session_data, ...result.body.user}
+
+      await this.websocketConnection ()
       return result.body.headers
     } catch (e) {
       this.openToast(e.message, 'error')
       await new Promise(resolve => setTimeout(resolve, 1000));
       document.location.href = '/login'
+    }
+  }
+
+  async websocketConnection () {
+    this.socket = new WebSocket(this.urlWebsocket)
+
+    await new Promise((resolve, reject) => {
+      this.socket.addEventListener("open", (event) => {
+        const body = {
+          type: 'session',
+          token: this.session_data.token
+        }
+        this.socket.send(JSON.stringify(body))
+      });
+
+      this.socket.addEventListener("error", (event) => {
+        const body = {
+          message: 'Unable to connect to the server'
+        }
+        return reject (body)
+      });
+
+
+      this.socket.addEventListener ("message", (e) => {
+        const body = JSON.parse(e.data)
+
+        if (body.code === 405) {
+          return reject (body)
+        }
+
+        resolve()
+      })
+    })
+
+    this.socket.addEventListener ("message", (e) => {
+      this.receiveMessage(JSON.parse(e.data))
+    })
+  }
+
+  sendWebsocketMessage (body, type) {
+    body.type = type
+    this.socket.send(JSON.stringify(body))
+  }
+
+  receiveMessage (body) {
+    switch (body.type) {
+      case 'message-received':
+        // DO SOME NOTIFICATION
+        if (this.currentPage?.updateMessage) {
+          this.currentPage?.updateMessage (body)
+        }
+
+        this.openToast ('Just received a new message!', 'info')
+        break;
+      case 'message-send':
+        this.currentPage?.updateMessage (body)
+        if (body.code === 400) {
+          app.openToast(body.message, 'error')
+        }
+        break;
     }
   }
 }

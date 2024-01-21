@@ -7,13 +7,15 @@ export class SimpleInput extends LitElement {
     placeholder: { type: String },
     required: { type: Boolean },
     value: { type: String },
-    invalid: { type: Boolean }
+    invalid: { type: Boolean },
+    disabled: { type: Boolean }
   }
 
   constructor() {
     super()
     this.value = ''
     this.invalid = false
+    this.disabled = false
   }
 
   static styles = css `
@@ -43,6 +45,10 @@ export class SimpleInput extends LitElement {
     input::placeholder {
       color: #333;
     }
+
+    input:disabled {
+      background-color: #eee;
+    }
   `
 
   render() {
@@ -52,7 +58,7 @@ export class SimpleInput extends LitElement {
     }
 
     return html`
-      <input class="${this.invalid === true ? `invalid` : ''}" @change=${this.__change} @keypress=${this.__keypress} @focus=${this.__focus} @blur=${this.__blur} .type=${type} .placeholder=${this.placeholder} ?required=${this.required} value=${this.value} />
+      <input ?disabled=${this.disabled} class="${this.invalid === true ? `invalid` : ''}" @change=${this.__change} @keypress=${this.__keypress} @focus=${this.__focus} @blur=${this.__blur} .type=${type} .placeholder=${this.placeholder} ?required=${this.required} value=${this.value} />
     `
   }
 
