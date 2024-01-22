@@ -68,7 +68,11 @@ export class Proposals extends LitElement {
   }
 
   _proposal (proposal) {
-    const [date, time] = proposal.class_time.split(" ")
+    if (proposal.class_time) {
+      var [date, time] = proposal.class_time.split(" ")
+    } else {
+      var date = time = 'Need be defined'
+    }
 
     const menuClick = () => {
       const element = this.shadowRoot.getElementById('message-container-' + proposal.id)

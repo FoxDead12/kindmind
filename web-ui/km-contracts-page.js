@@ -310,7 +310,7 @@ export class Contract extends LitElement {
 
           <simple-button @click=${this._menuClick}>See messages</simple-button>
 
-          <div id="message-container" class="drop-down active">
+          <div id="message-container" class="drop-down">
             <message-manager .proposal=${this.data}></message-manager>
 
             <div class="sender-message">
