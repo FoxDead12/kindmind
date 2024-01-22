@@ -44,8 +44,14 @@ export class MessageManager extends LitElement {
       name_user = app.session_data.full_name
     } else {
       this.type = "other"
-      image_url = this.proposal.student.image_url
-      name_user = this.proposal.student.full_name
+
+      if (this.proposal?.student) {
+        image_url = this.proposal.student.image_url
+        name_user = this.proposal.student.full_name
+      } else {
+        image_url = this.proposal.professor.image_url
+        image_url = this.proposal.professor.image_url
+      }
     }
 
     message.message = message.message.replace('\n', '<br>')
