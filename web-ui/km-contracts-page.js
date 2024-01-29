@@ -279,9 +279,14 @@ export class Contract extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     console.log(this.data)
-    const [date, time] = this.data.class_time.split(" ")
-    this.date = date
-    this.time = time
+    if (this.data.class_time) {
+      const [date, time] = this.data.class_time.split(" ")
+      this.date = date
+      this.time = time
+    } else {
+      this.date = 'Need be defined'
+      this.time = 'Need be defined'
+    }
   }
 
   render () {
